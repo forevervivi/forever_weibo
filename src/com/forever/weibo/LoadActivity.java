@@ -15,6 +15,11 @@ import com.forever.util.Tools;
 import com.forever.xx.Userxx;
 import com.weibo.forever.R;
 
+/**
+ * 程序启动欢迎界面
+ * @author NightwisH
+ *
+ */
 public class LoadActivity extends Activity {
 
 	ImageView loadImage;
