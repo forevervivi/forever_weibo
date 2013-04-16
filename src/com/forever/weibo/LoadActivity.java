@@ -3,6 +3,7 @@ package com.forever.weibo;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -79,6 +80,10 @@ public class LoadActivity extends Activity {
 		
 		if(list_users == null || list_users.isEmpty()){
 			Toast.makeText(this, "空~~~~~~~~", Toast.LENGTH_SHORT).show();
+			Intent intent = new Intent(this,OAuthActivity.class);
+	        startActivity(intent);
+	        finish();
+	        
 		}
 	}
 
