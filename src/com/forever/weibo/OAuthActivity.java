@@ -1,10 +1,18 @@
 package com.forever.weibo;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +20,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.forever.user.User;
+import com.forever.xx.Userxx;
 import com.weibo.forever.R;
 import com.weibo.sdk.android.Oauth2AccessToken;
 import com.weibo.sdk.android.Weibo;
@@ -139,8 +149,36 @@ public class OAuthActivity extends Activity {
  					@Override
  					public void onComplete(String arg0) {
  						// TODO Auto-generated method stub
- 						Log.i(TAG, "arg0:  "+arg0 
- 								);
+ 						Log.i(TAG, "arg0:  "+arg0);
+ 						try {
+							JSONObject user_json = new JSONObject(arg0);
+							User user = new User();
+							Log.i("OAuthActivity", "(user_json.getLong(id)" + user_json.getLong("id"));
+							//user.setId(user_json.getLong("id"));
+							user.setUser_id(user_json.getString("idstr"));
+							user.setUser_name(user_json.getString("screen_name"));
+							user.setDescription(user_json.getString("description"));
+							
+							//根据json返回的url得到用户头像
+							URL url = new URL(user_json.getString("profile_image_url"));
+							HttpURLConnection httpconn =(HttpURLConnection) url.openConnection();
+							InputStream is = httpconn.getInputStream();
+							Drawable user_head = Drawable.createFromStream(is, "");
+							
+							user.setUser_head(user_head);
+							Userxx userxx = new Userxx(OAuthActivity.this); 
+							userxx.insertUser(user);
+							
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (MalformedURLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
  					}
  				});
               }

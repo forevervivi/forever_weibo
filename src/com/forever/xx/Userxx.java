@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import com.forever.db.DBHelper;
 import com.forever.db.DBInfo;
@@ -24,9 +25,12 @@ import com.forever.user.User;
  */
 public class Userxx {
 	//User表需要查询的字段
-	String[] columns = { DBInfo.Table._ID, DBInfo.Table.USER_ID,
+	/*String[] columns = { DBInfo.Table._ID, DBInfo.Table.USER_ID,
             DBInfo.Table.USER_NAME, DBInfo.Table.TOKEN,
             DBInfo.Table.TOKEN_SECRET, DBInfo.Table.DESCRIPTION,
+            DBInfo.Table.USER_HEAD };*/
+	String[] columns = { DBInfo.Table._ID, DBInfo.Table.USER_ID,
+            DBInfo.Table.USER_NAME,  DBInfo.Table.DESCRIPTION,
             DBInfo.Table.USER_HEAD };
 	
 	DBHelper dbHelper = null;
@@ -42,8 +46,8 @@ public class Userxx {
 		ContentValues cv = new ContentValues();
 		cv.put(DBInfo.Table.USER_NAME, user.getUser_name());
 		cv.put(DBInfo.Table.USER_ID, user.getUser_id());
-		cv.put(DBInfo.Table.TOKEN, user.getToken());
-		cv.put(DBInfo.Table.TOKEN_SECRET, user.getToken_secret());
+		/*cv.put(DBInfo.Table.TOKEN, user.getToken());
+		cv.put(DBInfo.Table.TOKEN_SECRET, user.getToken_secret());*/
 		cv.put(DBInfo.Table.DESCRIPTION, user.getDescription());
 		
 		 // 将图片类型的数据进行存储的时候，需要进行转换才能存储到BLOB类型中
@@ -82,6 +86,8 @@ public class Userxx {
 		
 		Cursor cursor = db.query(DBInfo.Table.USER_TABLE, columns, null, null, null, null, null, null);
 		if(cursor != null && cursor.getCount()>0) {
+			
+			Log.i("Userxx", "cursor不为空");
 			list_users = new ArrayList<User>(cursor.getCount());
 			while(cursor.moveToNext()) {
 				 user = new User();
@@ -92,10 +98,10 @@ public class Userxx {
 						.getColumnIndex(DBInfo.Table.USER_ID)));
 				user.setUser_name(cursor.getString(cursor
 						.getColumnIndex(DBInfo.Table.USER_NAME)));
-				user.setToken(cursor.getString(cursor
+				/*user.setToken(cursor.getString(cursor
 						.getColumnIndex(DBInfo.Table.TOKEN)));
 				user.setToken_secret(cursor.getString(cursor
-						.getColumnIndex(DBInfo.Table.TOKEN_SECRET)));
+						.getColumnIndex(DBInfo.Table.TOKEN_SECRET)));*/
 				user.setDescription(cursor.getString(cursor
 						.getColumnIndex(DBInfo.Table.DESCRIPTION)));
 				
@@ -113,6 +119,6 @@ public class Userxx {
 		 cursor.close();
 	     db.close();
 		
-		return null;
+		return list_users;
 	}
 }

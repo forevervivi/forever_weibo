@@ -7,6 +7,7 @@
 
     <ImageView android:id="@+id/loadImage"
         android:src="@drawable/load"
+        android:scaleType="fitXY"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"/>
 
