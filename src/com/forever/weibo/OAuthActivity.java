@@ -1,5 +1,7 @@
 package com.forever.weibo;
 
+import java.io.IOException;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -16,6 +18,8 @@ import com.weibo.sdk.android.Weibo;
 import com.weibo.sdk.android.WeiboAuthListener;
 import com.weibo.sdk.android.WeiboDialogError;
 import com.weibo.sdk.android.WeiboException;
+import com.weibo.sdk.android.api.UsersAPI;
+import com.weibo.sdk.android.net.RequestListener;
 
 
 /**
@@ -24,10 +28,15 @@ import com.weibo.sdk.android.WeiboException;
  *
  */
 public class OAuthActivity extends Activity {
+	
+	private static final String TAG = "OAuthActivity";
 	private Weibo mWeibo;
-    private static final String CONSUMER_KEY = "3848744159";// 替换为开发者的appkey，例如"1646212860";
+    private static final String CONSUMER_KEY = "3848744159";// uid:   1829912263
     private static final String REDIRECT_URL = "http://www.baidu.com";
+    
     public static Oauth2AccessToken accessToken;
+    private String uid;
+    private long uidL = 1829912263;
     private Dialog dialog = null;
  
     @Override
@@ -49,6 +58,13 @@ public class OAuthActivity extends Activity {
             @Override
             public void onClick(View v) {
             	 mWeibo.authorize(OAuthActivity.this, new AuthDialogListener());
+            	 
+   //         	 StatusesAPI statusApi = new StatusesAPI(OAuthActivity.accessToken);
+//            	 statusApi.update(content, lat, lon, listener)
+            	
+            	
+            	 
+            	 
                  }
              });
          }
@@ -73,14 +89,18 @@ public class OAuthActivity extends Activity {
    
       class AuthDialogListener implements WeiboAuthListener {
 
-          @Override
+         
+
+		@Override
           public void onComplete(Bundle values) {
               String token = values.getString("access_token");
               String expires_in = values.getString("expires_in");
+              uid = values.getString("uid");
               OAuthActivity.accessToken = new Oauth2AccessToken(token, expires_in);
+              Log.i("OAuthActivity", "OAuthActivity.accessToken:" + OAuthActivity.accessToken);
               if (OAuthActivity.accessToken.isSessionValid()) {
                  
-              Log.i("OAuthActivity", "取得token" + token);
+              Log.i("OAuthActivity", "uid:   " + uid);
                   try {
                       Class sso = Class
                               .forName("com.weibo.sdk.android.api.WeiboAPI");// 如果支持weiboapi的话，显示api功能演示入口按钮
@@ -95,6 +115,34 @@ public class OAuthActivity extends Activity {
                           .show();
                   
                   dialog.dismiss();
+                  Log.i("OAuthActivity", "OAuthActivity.accessToken:" + OAuthActivity.accessToken);
+                  UsersAPI users = new UsersAPI(OAuthActivity.accessToken) ;
+             	 
+              	
+             	 Log.i("OAuthActivity", "UIDSTR:" + uid);
+             	 users.show(Long.parseLong(uid), new RequestListener() {
+             		 
+             		 
+ 					
+ 					@Override
+ 					public void onIOException(IOException arg0) {
+ 						// TODO Auto-generated method stub
+ 						 Log.i("OAuthActivity", "onIOException" + arg0.getMessage());
+ 					}
+ 					
+ 					@Override
+ 					public void onError(WeiboException arg0) {
+ 						// TODO Auto-generated method stub
+ 						 Log.i("OAuthActivity", "onError" + arg0.getMessage());
+ 					}
+ 					
+ 					@Override
+ 					public void onComplete(String arg0) {
+ 						// TODO Auto-generated method stub
+ 						Log.i(TAG, "arg0:  "+arg0 
+ 								);
+ 					}
+ 				});
               }
           }
 
