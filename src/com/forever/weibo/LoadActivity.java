@@ -35,7 +35,7 @@ public class LoadActivity extends Activity {
 		initView();
 		// loadImage动画效果，透明动画。
 		animation = new AlphaAnimation(0.1f, 1.0f);
-		animation.setDuration(3000);
+		animation.setDuration(1000);
 
 		loadImage.setAnimation(animation);
 
@@ -73,17 +73,26 @@ public class LoadActivity extends Activity {
 
 	}
 
+	
 	private void init() {
 		Tools.checkNetwork(LoadActivity.this);
 		Userxx userxx = new Userxx(LoadActivity.this);
 		List<User> list_users = userxx.findAllUsers();
 		
+		/**
+		 *判断数据库是否有user信息，如果有就直接跳转到用户界面，没有跳转到授权界面。
+		 */
 		if(list_users == null || list_users.isEmpty()){
 			Toast.makeText(this, "空~~~~~~~~", Toast.LENGTH_SHORT).show();
-			Intent intent = new Intent(this,OAuthActivity.class);
+			Intent intent = new Intent(LoadActivity.this,OAuthActivity.class);
 	        startActivity(intent);
-	        finish();
+	        this.finish();
 	        
+		}else{
+			Intent intent = new Intent(LoadActivity.this,HomeActivity.class);
+			startActivity(intent);
+			this.finish();
+			
 		}
 	}
 

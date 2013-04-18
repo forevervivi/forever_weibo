@@ -12,9 +12,13 @@ public class User {
     private Long id;  //用户序号
     private String user_id;
     private String user_name;
+    private String description;
+    private int statuses_count;//微博数量
+    private int followers_count;//粉丝数量
+    private int friends_count;//关注数量
     private String token;
     private String token_secret;
-    private String description;
+   
     private Drawable user_head; // 用户头像
 
     public User() {
@@ -67,15 +71,33 @@ public class User {
     public void setUser_id(String user_id) {
         this.user_id = user_id;
     }
-
-    public String getUser_name() {
-        return user_name;
+    
+    public void setUser_head(Drawable user_head) {
+        this.user_head = user_head;
     }
+   
 
     public void setUser_name(String user_name) {
         this.user_name = user_name;
     }
+    
+    public void setStatuses_count(int statuses_count) {
+    	this.statuses_count = statuses_count;
+    }
+    
+    public void setFollowers_count(int followers_count) {
+    	this.followers_count = followers_count;
+    }
+    
+    public void setFriends_count(int friends_count) {
+    	this.friends_count = friends_count;
+    }
 
+    
+    public String getUser_name() {
+        return user_name;
+    }
+    
     public String getToken() {
         return token;
     }
@@ -104,8 +126,19 @@ public class User {
         return user_head;
     }
 
-    public void setUser_head(Drawable user_head) {
-        this.user_head = user_head;
+   
+    
+    public int getStatuses_count() {
+    	return statuses_count;
     }
+    
+    public int getFollowers_count() {
+    	return followers_count;
+    }
+    
+    public int getFriends_count() {
+    	return friends_count;
+    }
+
 
 }

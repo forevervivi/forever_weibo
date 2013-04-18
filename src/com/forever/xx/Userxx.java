@@ -31,7 +31,8 @@ public class Userxx {
             DBInfo.Table.USER_HEAD };*/
 	String[] columns = { DBInfo.Table._ID, DBInfo.Table.USER_ID,
             DBInfo.Table.USER_NAME,  DBInfo.Table.DESCRIPTION,
-            DBInfo.Table.USER_HEAD };
+            DBInfo.Table.USER_HEAD,DBInfo.Table.STATUSES_COUNT,
+            DBInfo.Table.FOLLOWERS_COUNT,DBInfo.Table.FRIENDS_COUNT};
 	
 	DBHelper dbHelper = null;
 	SQLiteDatabase db = null;
@@ -49,6 +50,10 @@ public class Userxx {
 		/*cv.put(DBInfo.Table.TOKEN, user.getToken());
 		cv.put(DBInfo.Table.TOKEN_SECRET, user.getToken_secret());*/
 		cv.put(DBInfo.Table.DESCRIPTION, user.getDescription());
+		
+		cv.put(DBInfo.Table.STATUSES_COUNT, user.getStatuses_count());
+		cv.put(DBInfo.Table.FOLLOWERS_COUNT, user.getFollowers_count());
+		cv.put(DBInfo.Table.FRIENDS_COUNT, user.getFriends_count());
 		
 		 // 将图片类型的数据进行存储的时候，需要进行转换才能存储到BLOB类型中
         ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -75,7 +80,22 @@ public class Userxx {
 	}
 	
 	public User findUserByUserID(String user_id) {
-		return null;
+		db = dbHelper.getReadableDatabase();
+		User user = null;
+		
+		Cursor cursor = db.query(DBInfo.Table.USER_TABLE, columns, null, null, null, null, null, null);
+		if(cursor != null && cursor.getCount()>0) {
+			
+			user = new User();
+			cursor.moveToFirst();
+			//cursor.moveToNext();
+			getUserFromDB(user, cursor);
+		}
+		
+		
+		cursor.close();
+		db.close();
+		return user;
 	}
 	
 	public List<User> findAllUsers() {
@@ -92,25 +112,7 @@ public class Userxx {
 			while(cursor.moveToNext()) {
 				 user = new User();
 				 
-				user.setId(cursor.getLong(cursor
-						.getColumnIndex(DBInfo.Table._ID)));
-				user.setUser_id(cursor.getString(cursor
-						.getColumnIndex(DBInfo.Table.USER_ID)));
-				user.setUser_name(cursor.getString(cursor
-						.getColumnIndex(DBInfo.Table.USER_NAME)));
-				/*user.setToken(cursor.getString(cursor
-						.getColumnIndex(DBInfo.Table.TOKEN)));
-				user.setToken_secret(cursor.getString(cursor
-						.getColumnIndex(DBInfo.Table.TOKEN_SECRET)));*/
-				user.setDescription(cursor.getString(cursor
-						.getColumnIndex(DBInfo.Table.DESCRIPTION)));
-				
-				byte[] byteHead = cursor.getBlob(cursor
-						.getColumnIndex(DBInfo.Table.USER_HEAD));
-
-				ByteArrayInputStream is = new ByteArrayInputStream(byteHead);
-				Drawable userHead = Drawable.createFromStream(is, "srcName");
-				user.setUser_head(userHead);
+				getUserFromDB(user, cursor);
 
 				list_users.add(user);
 			}
@@ -120,5 +122,30 @@ public class Userxx {
 	     db.close();
 		
 		return list_users;
+	}
+
+	private void getUserFromDB(User user, Cursor cursor) {
+		user.setId(cursor.getLong(cursor
+				.getColumnIndex(DBInfo.Table._ID)));
+		user.setUser_id(cursor.getString(cursor
+				.getColumnIndex(DBInfo.Table.USER_ID)));
+		user.setUser_name(cursor.getString(cursor
+				.getColumnIndex(DBInfo.Table.USER_NAME)));
+		/*user.setToken(cursor.getString(cursor
+				.getColumnIndex(DBInfo.Table.TOKEN)));
+		user.setToken_secret(cursor.getString(cursor
+				.getColumnIndex(DBInfo.Table.TOKEN_SECRET)));*/
+		user.setDescription(cursor.getString(cursor
+				.getColumnIndex(DBInfo.Table.DESCRIPTION)));
+		user.setStatuses_count(cursor.getInt(cursor.getColumnIndex(DBInfo.Table.STATUSES_COUNT)));
+		user.setFollowers_count(cursor.getInt(cursor.getColumnIndex(DBInfo.Table.FOLLOWERS_COUNT)));
+		user.setFriends_count(cursor.getInt(cursor.getColumnIndex(DBInfo.Table.FRIENDS_COUNT)));
+		
+		byte[] byteHead = cursor.getBlob(cursor
+				.getColumnIndex(DBInfo.Table.USER_HEAD));
+
+		ByteArrayInputStream is = new ByteArrayInputStream(byteHead);
+		Drawable userHead = Drawable.createFromStream(is, "srcName");
+		user.setUser_head(userHead);
 	}
 }

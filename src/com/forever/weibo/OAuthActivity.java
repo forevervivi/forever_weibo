@@ -52,7 +52,7 @@ public class OAuthActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.oauth);
+        setContentView(R.layout.activity_oauth);
         mWeibo = Weibo.getInstance(CONSUMER_KEY, REDIRECT_URL);
         
      
@@ -158,6 +158,10 @@ public class OAuthActivity extends Activity {
 							user.setUser_id(user_json.getString("idstr"));
 							user.setUser_name(user_json.getString("screen_name"));
 							user.setDescription(user_json.getString("description"));
+							user.setStatuses_count(user_json.getInt("statuses_count"));
+							user.setFollowers_count(user_json.getInt("followers_count"));
+							user.setFriends_count(user_json.getInt("friends_count"));
+							
 							
 							//根据json返回的url得到用户头像
 							URL url = new URL(user_json.getString("profile_image_url"));
@@ -168,6 +172,10 @@ public class OAuthActivity extends Activity {
 							user.setUser_head(user_head);
 							Userxx userxx = new Userxx(OAuthActivity.this); 
 							userxx.insertUser(user);
+							
+							Intent intent = new Intent(OAuthActivity.this,HomeActivity.class);
+							startActivity(intent);
+							OAuthActivity.this.finish();
 							
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block

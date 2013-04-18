@@ -31,6 +31,18 @@ public class DBInfo {
          */
         public static final String USER_NAME = "user_name";
         /**
+         * 微博数量
+         */
+        public static final String STATUSES_COUNT = "statuses_count";
+        /**
+         * 粉丝数量
+         */
+        public static final String FOLLOWERS_COUNT = "followers_count";
+        /**
+         * 关注数量
+         */
+        public static final String FRIENDS_COUNT = "friends_count";
+        /**
          * token
          */
         public static final String TOKEN = "token";
@@ -56,7 +68,11 @@ public class DBInfo {
                 + " integer primary key autoincrement, "
                 + USER_ID
                 + " text, "
-                + USER_NAME + " text, "+TOKEN+" text, "+TOKEN_SECRET+" text, "+DESCRIPTION+" text, "+ USER_HEAD+" BLOB);";
+                + USER_NAME + " text, "
+                + STATUSES_COUNT + " integer,"
+                + FOLLOWERS_COUNT + " integer,"
+                + FRIENDS_COUNT + " integer,"
+                + TOKEN+" text, "+TOKEN_SECRET+" text, "+DESCRIPTION+" text, "+ USER_HEAD+" BLOB);";
         
         /**
          * 删除用户表空间语
