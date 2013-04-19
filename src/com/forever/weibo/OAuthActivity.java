@@ -29,6 +29,7 @@ import com.weibo.sdk.android.WeiboAuthListener;
 import com.weibo.sdk.android.WeiboDialogError;
 import com.weibo.sdk.android.WeiboException;
 import com.weibo.sdk.android.api.UsersAPI;
+import com.weibo.sdk.android.keep.AccessTokenKeeper;
 import com.weibo.sdk.android.net.RequestListener;
 
 
@@ -108,6 +109,8 @@ public class OAuthActivity extends Activity {
               uid = values.getString("uid");
               OAuthActivity.accessToken = new Oauth2AccessToken(token, expires_in);
               Log.i("OAuthActivity", "OAuthActivity.accessToken:" + OAuthActivity.accessToken);
+              AccessTokenKeeper.keepAccessToken(OAuthActivity.this,
+                      accessToken);
               if (OAuthActivity.accessToken.isSessionValid()) {
                  
               Log.i("OAuthActivity", "uid:   " + uid);

@@ -1,10 +1,18 @@
 package com.forever.util;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.provider.Settings;
@@ -13,8 +21,34 @@ import android.widget.Toast;
 
 import com.weibo.forever.R;
 
+
 public class Tools {
 
+	public static String formatDate(String date_str) {
+		Date date = new Date(date_str);
+		SimpleDateFormat formatter = new SimpleDateFormat("MM-dd HH:mm");
+		return formatter.format(date);
+	}
+	
+	 /**
+     * 通过url 获得对应的Drawable资源
+     * 
+     * @param url
+     * @return
+     */
+    public static Drawable getDrawableFromUrl(String url) {
+        try {
+            URLConnection urls = new URL(url).openConnection();
+            return Drawable.createFromStream(urls.getInputStream(), "image");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    
 	/**
 	 * 判断网络是否可用
 	 */
