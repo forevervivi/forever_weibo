@@ -144,7 +144,7 @@ public class MyListView extends ListView implements OnScrollListener {
 
 			case MotionEvent.ACTION_UP://手松开  对应松开刷新状态
 
-				if (state != REFRESHING && state != LOADING) {{//手松开有4个状态：下拉刷新、松开刷新、正在刷新、完成刷新。如果当前不是正在刷新  
+				if (state != REFRESHING && state != LOADING) {//手松开有4个状态：下拉刷新、松开刷新、正在刷新、完成刷新。如果当前不是正在刷新  
 					if (state == DONE) {
 						//如果当前是完成刷新，什么都不做
 					}
