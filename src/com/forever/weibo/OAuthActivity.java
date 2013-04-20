@@ -17,10 +17,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.forever.user.User;
+import com.forever.weibo.LoginActivity.UserCurrent;
 import com.forever.xx.Userxx;
 import com.weibo.forever.R;
 import com.weibo.sdk.android.Oauth2AccessToken;
@@ -42,12 +45,11 @@ public class OAuthActivity extends Activity {
 	
 	private static final String TAG = "OAuthActivity";
 	private Weibo mWeibo;
-    private static final String CONSUMER_KEY = "3848744159";// uid:   1829912263
+    private static final String CONSUMER_KEY = "3848744159";// 
     private static final String REDIRECT_URL = "http://www.baidu.com";
     
     public static Oauth2AccessToken accessToken;
     private String uid;
-    private long uidL = 1829912263;
     private Dialog dialog = null;
  
     @Override
@@ -68,35 +70,14 @@ public class OAuthActivity extends Activity {
         oauth_start.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+            	CookieSyncManager.createInstance(getApplicationContext());
+            	CookieManager.getInstance().removeAllCookie();
             	 mWeibo.authorize(OAuthActivity.this, new AuthDialogListener());
-            	 
-   //         	 StatusesAPI statusApi = new StatusesAPI(OAuthActivity.accessToken);
-//            	 statusApi.update(content, lat, lon, listener)
-            	
-            	
-            	 
             	 
                  }
              });
          }
 
-    /**
-     * 返回的时候会执行
-     */
-      @Override
-      protected void onNewIntent(Intent intent) {
-          super.onNewIntent(intent);
-          // 获得用户是授权数据
-          
-        /*  User u = Tools.getInstance().getUserInfo(user);
-          
-          Log.i(TAG, "----user2-------" + u.toString());
-          Userxx xx = new Userxx(this);
-          xx.inserUser(u);
-          dialog.dismiss();
-          startActivity(new Intent(this, LoginActivity.class));
-          finish();*/
-      }
    
       class AuthDialogListener implements WeiboAuthListener {
 
@@ -109,8 +90,8 @@ public class OAuthActivity extends Activity {
               uid = values.getString("uid");
               OAuthActivity.accessToken = new Oauth2AccessToken(token, expires_in);
               Log.i("OAuthActivity", "OAuthActivity.accessToken:" + OAuthActivity.accessToken);
-              AccessTokenKeeper.keepAccessToken(OAuthActivity.this,
-                      accessToken);
+              
+              
               if (OAuthActivity.accessToken.isSessionValid()) {
                  
               Log.i("OAuthActivity", "uid:   " + uid);
@@ -122,16 +103,15 @@ public class OAuthActivity extends Activity {
                       Log.i("OAuthActivity", "com.weibo.sdk.android.api.WeiboAPI not found");
 
                   }
-               /*   AccessTokenKeeper.keepAccessToken(OAuthActivity.this,
-                          accessToken);*/
+                  
                   Toast.makeText(OAuthActivity.this, "认证成功", Toast.LENGTH_SHORT)
                           .show();
                   
                   dialog.dismiss();
                   Log.i("OAuthActivity", "OAuthActivity.accessToken:" + OAuthActivity.accessToken);
+                  
                   UsersAPI users = new UsersAPI(OAuthActivity.accessToken) ;
              	 
-              	
              	 Log.i("OAuthActivity", "UIDSTR:" + uid);
              	 users.show(Long.parseLong(uid), new RequestListener() {
              		 
@@ -154,6 +134,7 @@ public class OAuthActivity extends Activity {
  						// TODO Auto-generated method stub
  						Log.i(TAG, "arg0:  "+arg0);
  						try {
+ 							Log.i("usexx", "启动intent前………………");
 							JSONObject user_json = new JSONObject(arg0);
 							User user = new User();
 							Log.i("OAuthActivity", "(user_json.getLong(id)" + user_json.getLong("id"));
@@ -164,6 +145,10 @@ public class OAuthActivity extends Activity {
 							user.setStatuses_count(user_json.getInt("statuses_count"));
 							user.setFollowers_count(user_json.getInt("followers_count"));
 							user.setFriends_count(user_json.getInt("friends_count"));
+							
+							UserCurrent.currentUser = user;
+							 AccessTokenKeeper.keepAccessToken(OAuthActivity.this,user_json.getString("idstr"),
+				                      accessToken);
 							
 							
 							//根据json返回的url得到用户头像
@@ -176,12 +161,15 @@ public class OAuthActivity extends Activity {
 							Userxx userxx = new Userxx(OAuthActivity.this); 
 							userxx.insertUser(user);
 							
+							Log.i("usexx", "启动intent前………………");
+							
 							Intent intent = new Intent(OAuthActivity.this,HomeActivity.class);
 							startActivity(intent);
 							OAuthActivity.this.finish();
 							
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
+						
 							e.printStackTrace();
 						} catch (MalformedURLException e) {
 							// TODO Auto-generated catch block

@@ -80,16 +80,17 @@ public class LoadActivity extends Activity {
 		List<User> list_users = userxx.findAllUsers();
 		
 		/**
-		 *判断数据库是否有user信息，如果有就直接跳转到用户界面，没有跳转到授权界面。
+		 *判断数据库是否有user信息，如果有就直接跳转到登录界面，没有跳转到授权界面。
 		 */
 		if(list_users == null || list_users.isEmpty()){
-			Toast.makeText(this, "空~~~~~~~~", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "没有用户信息", Toast.LENGTH_SHORT).show();
 			Intent intent = new Intent(LoadActivity.this,OAuthActivity.class);
 	        startActivity(intent);
 	        this.finish();
 	        
 		}else{
-			Intent intent = new Intent(LoadActivity.this,HomeActivity.class);
+			
+			Intent intent = new Intent(LoadActivity.this,LoginActivity.class);
 			startActivity(intent);
 			this.finish();
 			

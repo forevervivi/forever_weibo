@@ -46,6 +46,9 @@
         </activity>
         
         <activity
+            android:name="com.forever.weibo.LoginActivity"
+            android:launchMode="singleTask" />
+        <activity
             android:name="com.forever.weibo.HomeActivity"
             android:launchMode="singleTask" />
         <activity

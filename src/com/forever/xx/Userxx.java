@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.DownloadManager.Query;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -43,7 +44,11 @@ public class Userxx {
 
 	public long insertUser(User user) {
 		db = dbHelper.getReadableDatabase();
+		Log.i("usexx", "插入数据前………………");
+		Cursor cursor = db.query(DBInfo.Table.USER_TABLE, columns, "user_id =" + user.getUser_id(), null, null, null, null, null);
+		if(cursor == null || cursor.getCount()==0) {
 		
+		Log.i("usexx", "插入数据……………………");
 		ContentValues cv = new ContentValues();
 		cv.put(DBInfo.Table.USER_NAME, user.getUser_name());
 		cv.put(DBInfo.Table.USER_ID, user.getUser_id());
@@ -67,8 +72,12 @@ public class Userxx {
         
 		long rowId = db.insert(DBInfo.Table.USER_TABLE, DBInfo.Table.USER_NAME, cv);
 		db.close();
-		
 		return rowId;
+		}
+		db.close();
+		return -1;
+		
+		
 	}
 	
 	public int update(User user) {
@@ -83,7 +92,7 @@ public class Userxx {
 		db = dbHelper.getReadableDatabase();
 		User user = null;
 		
-		Cursor cursor = db.query(DBInfo.Table.USER_TABLE, columns, null, null, null, null, null, null);
+		Cursor cursor = db.query(DBInfo.Table.USER_TABLE, columns, "user_id =" + user_id, null, null, null, null, null);
 		if(cursor != null && cursor.getCount()>0) {
 			
 			user = new User();
