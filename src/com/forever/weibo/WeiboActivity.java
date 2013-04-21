@@ -6,22 +6,28 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.forever.customui.MyListView;
@@ -56,19 +62,18 @@ public class WeiboActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_weibo);
-		
+
 		dialog = new ProgressDialog(this);
 		dialog.setTitle("正在获得数据……");
-		//dialog.setIndeterminate(false);
+		// dialog.setIndeterminate(false);
 		dialog.show();
 
 		listView = (MyListView) findViewById(R.id.weibo_listview);
 
-
 		handler = new Handler();
 
-		Oauth2AccessToken o2at = AccessTokenKeeper
-				.readAccessToken(WeiboActivity.this,UserCurrent.currentUser.getUser_id());
+		Oauth2AccessToken o2at = AccessTokenKeeper.readAccessToken(
+				WeiboActivity.this, UserCurrent.currentUser.getUser_id());
 
 		final StatusesAPI statuses = new StatusesAPI(o2at);
 		statuses.friendsTimeline(0l, 0l, 8, 1, false, WeiboAPI.FEATURE.ALL,
@@ -94,7 +99,7 @@ public class WeiboActivity extends Activity {
 						statuses.friendsTimeline(0l, 0l, 8, 1, false,
 								WeiboAPI.FEATURE.ALL, false,
 								new MyRequestListener());
-					//	refresh = true;
+						// refresh = true;
 						myAdapter.notifyDataSetChanged();
 						listView.onRefreshComplete();
 					}
@@ -102,6 +107,28 @@ public class WeiboActivity extends Activity {
 				}.execute();
 			}
 		});
+
+		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				LayoutInflater li = getLayoutInflater();
+				View pop = li.inflate(R.layout.popwindow, null);
+				PopupWindow pw = new PopupWindow(pop,
+						LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+				pw.setBackgroundDrawable(new BitmapDrawable());
+				pw.setOutsideTouchable(true);
+				//pw.showAtLocation(view, Gravity.CENTER, 0, 0);
+				pw.showAsDropDown(view, 0, -200);
+				
+				pw.setFocusable(true);
+
+				return true;
+			}
+		});
+
 	}
 
 	class MyRequestListener implements RequestListener {
@@ -110,83 +137,60 @@ public class WeiboActivity extends Activity {
 		public void onComplete(String arg0) {
 			// TODO Auto-generated method stub
 
-
-		/*	if (refresh == true) {
-				creat_at_times.clear();
-				texts.clear();
-				text_images.clear();
-				retweeted_status_texts.clear();
-				user_heads.clear();
-				user_names.clear();
-				reposts.clear();
-				comments.clear();
-				refresh = false;
-			}*/
+			/*
+			 * if (refresh == true) { creat_at_times.clear(); texts.clear();
+			 * text_images.clear(); retweeted_status_texts.clear();
+			 * user_heads.clear(); user_names.clear(); reposts.clear();
+			 * comments.clear(); refresh = false; }
+			 */
 
 			dialog.dismiss();
 
-				refresh(arg0);
-				
-				
+			refresh(arg0);
 
-			
-/*			try {
-				JSONObject weibo_json = new JSONObject(arg0);
-				JSONArray weibo_array = weibo_json.getJSONArray("statuses");
-				for (int i = 0; i < weibo_array.length(); i++) {
-					JSONObject weibo = weibo_array.getJSONObject(i);
-					
-					creat_at_times.add(weibo.getString("created_at"));
-					texts.add(weibo.getString("text"));
-					user_heads.add(new JSONObject(weibo.getString("user"))
-					.getString("profile_image_url"));
-					user_names.add(new JSONObject(weibo.getString("user"))
-					.getString("name"));
-					reposts.add(String.valueOf(weibo.getInt("reposts_count")));
-					comments.add(String.valueOf(weibo.getInt("comments_count")));
-					
-					// text_images.add(weibo.getString("thumbnail_pic")== null?
-					// "blank" : weibo.getString("thumbnail_pic") );
-					try {
-						text_images.add(weibo.getString("thumbnail_pic"));
-					} catch (Exception e) {
-						text_images.add("BLANK");
-					}
-					
-					
-					try {
-						retweeted_status_texts.add( weibo.getJSONObject("retweeted_status").getString("text"));
-					} catch (Exception e) {
-						retweeted_status_texts.add("BLANK");
-					}
-					
-				}
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			handler.post(new Runnable() {
-				
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					listView.setAdapter(myAdapter);
-				}
-			});
-*/
-			
-			/*Log.i("WeiboActivity", "Times :"
-					+ creat_at_times.toString().substring(0, 50));
-			Log.i("WeiboActivity", "Texts :"
-					+ texts.toString().substring(0, 50));
-			Log.i("WeiboActivity", "TextImage :"
-					+ text_images.toString());
-			Log.i("WeiboActivity", "Head_URL :"
-					+ user_heads.toString());
-			Log.i("WeiboActivity",
-					"Names :" + user_names.toString().substring(0, 50));*/
-			 
+			/*
+			 * try { JSONObject weibo_json = new JSONObject(arg0); JSONArray
+			 * weibo_array = weibo_json.getJSONArray("statuses"); for (int i =
+			 * 0; i < weibo_array.length(); i++) { JSONObject weibo =
+			 * weibo_array.getJSONObject(i);
+			 * 
+			 * creat_at_times.add(weibo.getString("created_at"));
+			 * texts.add(weibo.getString("text")); user_heads.add(new
+			 * JSONObject(weibo.getString("user"))
+			 * .getString("profile_image_url")); user_names.add(new
+			 * JSONObject(weibo.getString("user")) .getString("name"));
+			 * reposts.add(String.valueOf(weibo.getInt("reposts_count")));
+			 * comments.add(String.valueOf(weibo.getInt("comments_count")));
+			 * 
+			 * // text_images.add(weibo.getString("thumbnail_pic")== null? //
+			 * "blank" : weibo.getString("thumbnail_pic") ); try {
+			 * text_images.add(weibo.getString("thumbnail_pic")); } catch
+			 * (Exception e) { text_images.add("BLANK"); }
+			 * 
+			 * 
+			 * try { retweeted_status_texts.add(
+			 * weibo.getJSONObject("retweeted_status").getString("text")); }
+			 * catch (Exception e) { retweeted_status_texts.add("BLANK"); }
+			 * 
+			 * } } catch (JSONException e) { // TODO Auto-generated catch block
+			 * e.printStackTrace(); }
+			 * 
+			 * handler.post(new Runnable() {
+			 * 
+			 * @Override public void run() { // TODO Auto-generated method stub
+			 * listView.setAdapter(myAdapter); } });
+			 */
+
+			/*
+			 * Log.i("WeiboActivity", "Times :" +
+			 * creat_at_times.toString().substring(0, 50));
+			 * Log.i("WeiboActivity", "Texts :" + texts.toString().substring(0,
+			 * 50)); Log.i("WeiboActivity", "TextImage :" +
+			 * text_images.toString()); Log.i("WeiboActivity", "Head_URL :" +
+			 * user_heads.toString()); Log.i("WeiboActivity", "Names :" +
+			 * user_names.toString().substring(0, 50));
+			 */
+
 		}
 
 		private void refresh(String arg0) {
@@ -195,7 +199,7 @@ public class WeiboActivity extends Activity {
 				weibo_json = new JSONObject(arg0);
 				JSONArray weibo_array = weibo_json.getJSONArray("statuses");
 				myAdapter = new MyAdapter(getApplicationContext(), weibo_array);
-				
+
 				handler.post(new Runnable() {
 
 					@Override
@@ -204,7 +208,7 @@ public class WeiboActivity extends Activity {
 						listView.setAdapter(myAdapter);
 					}
 				});
-				
+
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -230,8 +234,8 @@ public class WeiboActivity extends Activity {
 		private ViewHolder holder;
 		private Context mContext;
 		private JSONArray mJsonArray;
-		
-		public MyAdapter(Context context,JSONArray jsonArray) {
+
+		public MyAdapter(Context context, JSONArray jsonArray) {
 			mContext = context;
 			mJsonArray = jsonArray;
 		}
@@ -274,7 +278,7 @@ public class WeiboActivity extends Activity {
 
 				holder.image_textImage = (ImageView) convertView
 						.findViewById(R.id.weibo_item_textImage);
-				
+
 				holder.tv_retweeted_status_texts = (TextView) convertView
 						.findViewById(R.id.weibo_item_retweeted_status_texts);
 
@@ -305,7 +309,7 @@ public class WeiboActivity extends Activity {
 				holder.tv_comment.setText(String
 						.valueOf(((JSONObject) mJsonArray.get(position))
 								.getInt("comments_count")));
-				//微博原文
+				// 微博原文
 				if (((JSONObject) mJsonArray.get(position))
 						.has("retweeted_status")) {
 
@@ -318,38 +322,36 @@ public class WeiboActivity extends Activity {
 											.getJSONObject("retweeted_status")
 											.getString("text"));
 
-					
 				} else {
 					// holder.tv_retweeted_status_texts.setVisibility(View.GONE);
 					LinearLayout layout = (LinearLayout) convertView
 							.findViewById(R.id.weibo_item_ll_retweeted_status);
 					layout.setVisibility(View.GONE);
 				}
-				
-				//头像图片
+
+				// 头像图片
 				Drawable head_image = AsyncImageLoader.loadDrawable(
-						(new JSONObject(((JSONObject) mJsonArray
-								.get(position)).getString("user"))
+						(new JSONObject(((JSONObject) mJsonArray.get(position))
+								.getString("user"))
 								.getString("profile_image_url")),
 						holder.image_head, position, new ImageCallback() {
 							@Override
-							public void imageSet(Drawable drawable,
-									ImageView iv) {
+							public void imageSet(Drawable drawable, ImageView iv) {
 								iv.setImageDrawable(drawable);
 							}
 						});
 				if (head_image != null) {
 					holder.image_head.setImageDrawable(head_image);
 				}
-				
-				//内容中图片
-				if(((JSONObject) mJsonArray.get(position))
-						.has("thumbnail_pic")){
+
+				// 内容中图片
+				if (((JSONObject) mJsonArray.get(position))
+						.has("thumbnail_pic")) {
 					Drawable image_text = AsyncImageLoader.loadDrawable(
-							((JSONObject) mJsonArray
-									.get(position)).getString("thumbnail_pic")
-									,
-							holder.image_textImage, position, new ImageCallback() {
+							((JSONObject) mJsonArray.get(position))
+									.getString("thumbnail_pic"),
+							holder.image_textImage, position,
+							new ImageCallback() {
 								@Override
 								public void imageSet(Drawable drawable,
 										ImageView iv) {
@@ -359,13 +361,12 @@ public class WeiboActivity extends Activity {
 					if (image_text != null) {
 						holder.image_textImage.setImageDrawable(image_text);
 					}
-					
+
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
-			
-			
+
 			Log.i("Position:", "Position:" + String.valueOf(position));
 
 			return convertView;

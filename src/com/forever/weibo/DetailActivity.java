@@ -15,8 +15,7 @@ import com.weibo.forever.R;
 
 public class DetailActivity extends Activity {
 	
-	private static final String USER_ID = UserCurrent.currentUser.getUser_id();
-	
+	private final String USER_ID = UserCurrent.currentUser.getUser_id();
 	
 	
 	private ImageView iv_head;

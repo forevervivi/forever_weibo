@@ -28,7 +28,8 @@ public class LoginActivity extends Activity {
 
 	private Spinner spinner;
 	private Button bt_submit, bt_authorize;
-	List<User> userData = null;
+	private List<User> userData = null;
+	private User current;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +67,8 @@ public class LoginActivity extends Activity {
 				@Override
 				public void onItemSelected(AdapterView<?> parent, View view,
 						int position, long id) {
-					User u = userData.get(position);
-					// 保存当前登录的用户
-					UserCurrent.currentUser = u;
+					 current = userData.get(position);
+					
 				}
 
 				@Override
@@ -142,6 +142,9 @@ public class LoginActivity extends Activity {
 			// TODO Auto-generated method stub
 			switch (v.getId()) {
 			case R.id.login_submit:
+				// 保存当前登录的用户
+				UserCurrent.currentUser = current;
+				
 				Intent intent1 = new Intent(LoginActivity.this,
 						HomeActivity.class);
 				startActivity(intent1);
@@ -153,7 +156,7 @@ public class LoginActivity extends Activity {
 				Intent intent2 = new Intent(LoginActivity.this,
 						OAuthActivity.class);
 				startActivity(intent2);
-				LoginActivity.this.finish();
+				//LoginActivity.this.finish();
 				break;
 			default:
 				break;

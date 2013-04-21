@@ -23,7 +23,15 @@
                 android:id="@+id/home_ll_01"
                 android:layout_width="108dip"
                 android:layout_height="108dip"
-                android:background="#FF7F24" >
+                android:background="#FF7F24"
+                android:gravity="center" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="账号信息"
+                    android:textColor="@color/white" >
+                </TextView>
             </LinearLayout>
 
             <LinearLayout
@@ -31,7 +39,15 @@
                 android:layout_width="108dip"
                 android:layout_height="108dip"
                 android:layout_marginLeft="5dip"
-                android:background="#FF7F24" >
+                android:background="#FF7F24"
+                android:gravity="center" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="关注微博"
+                    android:textColor="@color/white" >
+                </TextView>
             </LinearLayout>
         </LinearLayout>
 
@@ -45,7 +61,15 @@
                 android:id="@+id/home_ll_03"
                 android:layout_width="108dip"
                 android:layout_height="108dip"
-                android:background="#3399ff" >
+                android:background="#3399ff"
+                android:gravity="center" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="发送微博"
+                    android:textColor="@color/white" >
+                </TextView>
             </LinearLayout>
 
             <LinearLayout
@@ -53,7 +77,15 @@
                 android:layout_width="108dip"
                 android:layout_height="108dip"
                 android:layout_marginLeft="5dip"
-                android:background="#3399ff" >
+                android:background="#3399ff"
+                android:gravity="center" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="切换账号"
+                    android:textColor="@color/white" >
+                </TextView>
             </LinearLayout>
         </LinearLayout>
 

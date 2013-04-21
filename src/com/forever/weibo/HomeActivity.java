@@ -12,7 +12,7 @@ import com.weibo.forever.R;
 
 public class HomeActivity extends Activity {
 
-	private View view01, view02, view03;
+	private View view01, view02, view03,view04;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,12 +28,14 @@ public class HomeActivity extends Activity {
 		view01 = findViewById(R.id.home_ll_01);
 		view02 = findViewById(R.id.home_ll_02);
 		view03 = findViewById(R.id.home_ll_03);
+		view04 = findViewById(R.id.home_ll_04);
 	}
 
 	private void initListen() {
 		view01.setOnClickListener(new MyOnClickListener());
 		view02.setOnClickListener(new MyOnClickListener());
 		view03.setOnClickListener(new MyOnClickListener());
+		view04.setOnClickListener(new MyOnClickListener());
 	}
 
 	class MyOnClickListener implements OnClickListener {
@@ -56,6 +58,11 @@ public class HomeActivity extends Activity {
 				Intent intent3 = new Intent(getApplicationContext(),
 						WriteWeiboActivity.class);
 				HomeActivity.this.startActivity(intent3);
+				break;
+			case R.id.home_ll_04:
+				Intent intent4 = new Intent(getApplicationContext(),
+						LoginActivity.class);
+				HomeActivity.this.startActivity(intent4);
 				break;
 			default:
 				break;

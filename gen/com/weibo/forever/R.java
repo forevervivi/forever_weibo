@@ -329,7 +329,8 @@ public final class R {
         public static final int head=0x7f030008;
         public static final int login_user_item=0x7f030009;
         public static final int oauth_dialog=0x7f03000a;
-        public static final int weibo_item=0x7f03000b;
+        public static final int popwindow=0x7f03000b;
+        public static final int weibo_item=0x7f03000c;
     }
     public static final class string {
         public static final int app_name=0x7f070001;
