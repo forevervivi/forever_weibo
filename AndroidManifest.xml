@@ -47,17 +47,17 @@
         
         <activity
             android:name="com.forever.weibo.LoginActivity"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"/>
         <activity
             android:name="com.forever.weibo.HomeActivity"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"/>
         <activity
             android:name="com.forever.weibo.DetailActivity"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"/>
         <activity
             android:name="com.forever.weibo.WeiboActivity"
             android:launchMode="singleTask"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"/>
         <activity
             android:name="com.forever.weibo.WriteWeiboActivity"
             android:launchMode="singleTask"

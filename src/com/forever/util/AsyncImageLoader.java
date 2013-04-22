@@ -1,5 +1,6 @@
 package com.forever.util;
 
+import java.lang.ref.SoftReference;
 import java.util.HashMap;
 
 import android.graphics.drawable.Drawable;
@@ -17,12 +18,10 @@ public class AsyncImageLoader {
 	/**
 	 * 图片数据缓存 key = url ,value = 图片资源对象
 	 */
-	//private static HashMap<String, SoftReference<Drawable>> imageCache;
-	 private static HashMap<String, Drawable> imageCache;
+	private static HashMap<String, SoftReference<Drawable>> imageCache;
 
 	static {
-	//	imageCache = new HashMap<String, SoftReference<Drawable>>();
-			imageCache = new HashMap<String, Drawable>();
+		imageCache = new HashMap<String, SoftReference<Drawable>>();
 	}
 
 	/**
@@ -36,14 +35,14 @@ public class AsyncImageLoader {
 	 *            回调接口
 	 * @return 图片资源
 	 */
-	public static Drawable loadDrawable(final String url,
+	public static Drawable loadDrawable(final int flag,final String url,
 			final ImageView imageView,final int position, final ImageCallback callback) {
 		// 判断是否已经下载过，如果下载过，直接获得并返回
 		if (imageCache.containsKey(url)) {
-		//	SoftReference<Drawable> soft = imageCache.get(url);
+			SoftReference<Drawable> soft = imageCache.get(url);
 			Log.i("ImageCache000",url.toString()+"\nPosition:"+position);
-		//	Drawable dra = soft.get();
-			Drawable dra = imageCache.get(url);
+			Drawable dra = soft.get();
+			//Drawable dra = imageCache.get(url);
 			if (dra != null) {
 				return dra;
 			}else{
@@ -53,7 +52,7 @@ public class AsyncImageLoader {
 
 		final Handler handler = new Handler() {
 			@Override
-			public void handleMessage(Message msg) {
+			public  synchronized void handleMessage(Message msg) {
 				// 图片资源设置操作
 				callback.imageSet((Drawable) msg.obj, imageView);
 			}
@@ -61,12 +60,15 @@ public class AsyncImageLoader {
 		// 下载操作
 		new Thread() {
 			public void run() {
-				Drawable drawable = Tools.getDrawableFromUrl(url);
+				Drawable drawable = Tools.getDrawableFromUrl(flag,url);
 				// 设置缓存，避免重复下载相同的图片资源
-				//imageCache.put(url, new SoftReference<Drawable>(drawable));
-				imageCache.put(url, drawable);
+				imageCache.put(url, new SoftReference<Drawable>(drawable));
+				/*synchronized (handler) {
+					
+				}*/
 				Message msg = handler.obtainMessage(0, drawable);
 				handler.sendMessage(msg);
+				
 				Log.i("ImageCache222",url.toString()+"\nPosition:"+position);
 			}
 		}.start();

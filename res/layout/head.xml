@@ -60,7 +60,7 @@
   android:layout_width="wrap_content"
   android:layout_height="wrap_content"
   android:text="下拉刷新"
-  android:textColor="@color/white"
+  android:textColor="#8FB200"
   android:textSize="20sp"
   android:id="@+id/head_tipsTextView"
   />
@@ -71,7 +71,7 @@
   android:layout_height="wrap_content"
   android:id="@+id/head_lastUpdatedTextView"
   android:text="上次更新"
-  android:textColor="@color/white"
+  android:textColor="#8FB200"
   android:textSize="10sp"
   />
   

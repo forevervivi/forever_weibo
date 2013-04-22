@@ -8,12 +8,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore.Images;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.forever.app.App;
 import com.forever.util.CommonUtils;
 import com.forever.util.DialogUtils;
 import com.forever.util.DialogUtils.DialogCallBack;
@@ -36,6 +39,7 @@ import com.forever.weibo.LoginActivity.UserCurrent;
 import com.weibo.forever.R;
 import com.weibo.sdk.android.Oauth2AccessToken;
 import com.weibo.sdk.android.WeiboException;
+import com.weibo.sdk.android.api.CommentsAPI;
 import com.weibo.sdk.android.api.StatusesAPI;
 import com.weibo.sdk.android.keep.AccessTokenKeeper;
 import com.weibo.sdk.android.net.RequestListener;
@@ -53,6 +57,13 @@ public class WriteWeiboActivity extends Activity {
 	private static final int TOOLBAR0 = 0;
 	private static final int TOOLBAR1 = 1;
 	private static final int TOOLBAR2 = 2;
+	
+	//private boolean repostFlag = false;
+	private String successText = "分享成功。";
+	private String failText = "分享失败。";
+	private String sendingText = "分享中……";
+	
+	private long repost_id;
 
 	private Activity mInstance = null;
 	private Context mContext = null;
@@ -66,6 +77,7 @@ public class WriteWeiboActivity extends Activity {
 	private ImageView imageDeleteView = null;
 	private EditText weiboContentText = null;
 	private TextView wordCounterView = null;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,8 +87,19 @@ public class WriteWeiboActivity extends Activity {
 
 		mInstance = this;
 		mContext = this.getApplicationContext();
+		
 
 		initView();
+		
+		if(App.repostFlag == true) {
+			repost_id = this.getIntent().getExtras().getLong("repost_id");
+			imgChooseBtn.setVisibility(View.GONE);
+			shareBtn.setText("评论");
+			
+			successText = "评论成功。";
+			failText = "评论失败";
+			sendingText = "评论中……";
+		}
 	}
 
 	@Override
@@ -89,6 +112,13 @@ public class WriteWeiboActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 
+	}
+	
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+		App.repostFlag = false;
 	}
 
 	private void initView() {
@@ -151,8 +181,9 @@ public class WriteWeiboActivity extends Activity {
 			case R.id.share_submit:
 				if (isChecked()) {
 					if (NetworkUtils.getNetworkState(mContext) != NetworkUtils.NONE) {
+						
 
-						dialog.setMessage("分享中...");
+						dialog.setMessage(sendingText);
 						dialog.show();
 						new Thread(new UpdateStatusThread()).start();
 
@@ -202,7 +233,7 @@ public class WriteWeiboActivity extends Activity {
 			String retMsg = data.getString("retMsg");
 
 			if (retCode == 1) {
-				Toast.makeText(mContext, "分享成功。", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, successText, Toast.LENGTH_SHORT).show();
 
 				weiboContentText.setText("");
 				wordCounterView.setText("");
@@ -211,15 +242,17 @@ public class WriteWeiboActivity extends Activity {
 				weiboImgPath = null;
 			} else {
 				if (StringUtils.isBlank(retMsg)) {
-					Toast.makeText(mContext, "分享失败。", Toast.LENGTH_SHORT)
+					Toast.makeText(mContext, failText, Toast.LENGTH_SHORT)
 							.show();
 				} else {
-					Toast.makeText(mContext, "分享失败，" + retMsg,
+					Toast.makeText(mContext, failText + retMsg,
 							Toast.LENGTH_SHORT).show();
 				}
 			}
 		}
 	};
+
+	
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -269,7 +302,14 @@ public class WriteWeiboActivity extends Activity {
 							.readAccessToken(WriteWeiboActivity.this,UserCurrent.currentUser.getUser_id());
 
 					final StatusesAPI statuses = new StatusesAPI(o2at);
-					statuses.upload( weiboContentText.getText().toString(), weiboImgPath, null, null, new MyReListener());
+					if (App.repostFlag == true) {
+						CommentsAPI comments = new CommentsAPI(o2at);
+						comments.create(weiboContentText.getText().toString(), repost_id, false, new MyReListener());
+						Log.i("repost_id", "WriteWeibo"+String.valueOf(repost_id));
+					}else{
+						statuses.upload( weiboContentText.getText().toString(), weiboImgPath, null, null, new MyReListener());
+					}
+					
 					
 					retCode = 1;
 				} catch (Exception e) {
@@ -282,7 +322,14 @@ public class WriteWeiboActivity extends Activity {
 							.readAccessToken(WriteWeiboActivity.this,UserCurrent.currentUser.getUser_id());
 
 					final StatusesAPI statuses = new StatusesAPI(o2at);
-					statuses.update( weiboContentText.getText().toString(), null, null, new MyReListener());
+					//statuses.update( weiboContentText.getText().toString(), null, null, new MyReListener());
+					if (App.repostFlag == true) {
+						CommentsAPI comments = new CommentsAPI(o2at);
+						comments.create(weiboContentText.getText().toString(), repost_id, false, new MyReListener());
+						Log.i("repost_id", "WriteWeibo"+String.valueOf(repost_id));
+					}else{
+						statuses.upload( weiboContentText.getText().toString(), weiboImgPath, null, null, new MyReListener());
+					}
 					
 					retCode = 1;
 				} catch (Exception e) {
@@ -341,33 +388,6 @@ public class WriteWeiboActivity extends Activity {
 		return ret;
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(0, TOOLBAR0, 1, "注销登录").setIcon(
-				android.R.drawable.ic_menu_delete);
-		menu.add(0, TOOLBAR1, 2, "关于我们").setIcon(
-				android.R.drawable.ic_menu_help);
-		menu.add(0, TOOLBAR2, 3, "退出程序").setIcon(
-				android.R.drawable.ic_menu_revert);
-		return super.onCreateOptionsMenu(menu);
-	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == 0) {
-			DialogUtils.dialogBuilder(mInstance, "提示", "确定要注销当前用户吗？",
-					new DialogCallBack() {
-						@Override
-						public void callBack() {
-							Toast.makeText(mContext, "用户信息已注销。",
-									Toast.LENGTH_SHORT).show();
-						}
-					});
-		} else if (item.getItemId() == 1) {
-		} else {
-			finish();
-		}
-		return super.onOptionsItemSelected(item);
-	}
 
 }

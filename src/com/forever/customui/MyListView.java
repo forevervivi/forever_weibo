@@ -349,6 +349,7 @@ public class MyListView extends ListView implements OnScrollListener {
 
 	//此方法直接照搬自网络上的一个下拉刷新的demo，此处是“估计”headView的width以及height  
 	private void measureView(View child) {
+		Log.i("repost_text","measureView调用" );
 		ViewGroup.LayoutParams p = child.getLayoutParams();
 		if (p == null) {
 			p = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
