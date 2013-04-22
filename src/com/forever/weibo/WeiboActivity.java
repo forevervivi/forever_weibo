@@ -38,6 +38,7 @@ import com.forever.customui.MyListView;
 import com.forever.customui.MyListView.OnRefreshListener;
 import com.forever.util.AsyncImageLoader;
 import com.forever.util.AsyncImageLoader.ImageCallback;
+import com.forever.util.NetworkUtils;
 import com.forever.util.Tools;
 import com.forever.weibo.LoginActivity.UserCurrent;
 import com.weibo.forever.R;
@@ -60,9 +61,10 @@ public class WeiboActivity extends Activity {
 	private MyListView listView;
 	//private ListView listView;
 	private Button bt_pop_r, bt_pop_c;
+	
+	private String textImage;
 
 	private MyAdapter myAdapter;
-	boolean refresh = false;
 	private Dialog dialog;
 	private JSONArray weibo_array;
 
@@ -112,6 +114,9 @@ public class WeiboActivity extends Activity {
 					protected Void doInBackground(Void... params) {
 						try {
 							Thread.sleep(1000);
+							statuses.friendsTimeline(0l, 0l, 20, 1, false,
+									WeiboAPI.FEATURE.ALL, false,
+									new MyRequestListener());
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -121,9 +126,7 @@ public class WeiboActivity extends Activity {
 					@Override
 					protected void onPostExecute(Void result) {
 
-						statuses.friendsTimeline(0l, 0l, 20, 1, false,
-								WeiboAPI.FEATURE.ALL, false,
-								new MyRequestListener());
+						
 
 						myAdapter.notifyDataSetChanged();
 						listView.onRefreshComplete();
@@ -176,13 +179,13 @@ public class WeiboActivity extends Activity {
 								@Override
 								public void onIOException(IOException arg0) {
 									// TODO Auto-generated method stub
-									
+									Toast.makeText(WeiboActivity.this, "转发失败~", Toast.LENGTH_SHORT).show();
 								}
 								
 								@Override
 								public void onError(WeiboException arg0) {
 									// TODO Auto-generated method stub
-									
+									Toast.makeText(WeiboActivity.this, "转发失败~", Toast.LENGTH_SHORT).show();
 								}
 								
 								@Override
@@ -406,14 +409,20 @@ public class WeiboActivity extends Activity {
 				
 
 				// 内容中图片
+				if(NetworkUtils.getNetworkState(WeiboActivity.this)==NetworkUtils.WIFI){
+					textImage = "bmiddle_pic";
+				}else if(NetworkUtils.getNetworkState(WeiboActivity.this)==NetworkUtils.MOBILE) {
+					textImage = "thumbnail_pic";
+				}
+					
 				if (((JSONObject) mJsonArray.get(position))
-						.has("bmiddle_pic")) {//thumbnail_pic bmiddle_pic
+						.has(textImage)) {//thumbnail_pic bmiddle_pic
 					Log.i("position:", "Position^thumbnail_pic:" + position+ "\n"
 							+ ((JSONObject) mJsonArray.get(position))
 							.getString("text"));
 					Drawable image_text = AsyncImageLoader.loadDrawable(
 							1, (((JSONObject) mJsonArray.get(position))
-									.getString("bmiddle_pic")),
+									.getString(textImage)),
 							holder.image_textImage, position, new ImageCallback() {
 								@Override
 								public void imageSet(Drawable drawable, ImageView iv) {

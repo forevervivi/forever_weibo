@@ -35,7 +35,7 @@ public class LoadActivity extends Activity {
 		initView();
 		// loadImage动画效果，透明动画。
 		animation = new AlphaAnimation(0.1f, 1.0f);
-		animation.setDuration(1000);
+		animation.setDuration(2000);
 
 		loadImage.setAnimation(animation);
 
@@ -55,14 +55,14 @@ public class LoadActivity extends Activity {
 		public void onAnimationStart(Animation animation) {
 			// TODO Auto-generated method stub
 
-			init();
+			
 
 		}
 
 		@Override
 		public void onAnimationEnd(Animation animation) {
 			// TODO Auto-generated method stub
-
+			start();
 		}
 
 		@Override
@@ -74,8 +74,8 @@ public class LoadActivity extends Activity {
 	}
 
 	
-	private void init() {
-		Tools.checkNetwork(LoadActivity.this);
+	private void start() {
+		//Tools.checkNetwork(LoadActivity.this);
 		Userxx userxx = new Userxx(LoadActivity.this);
 		List<User> list_users = userxx.findAllUsers();
 		
