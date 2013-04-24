@@ -287,11 +287,11 @@ public final class R {
         public static final int detail_name=0x7f080001;
         public static final int detail_statuses=0x7f080004;
         public static final int download_btn=0x7f080017;
-        public static final int head_arrowImageView=0x7f080027;
-        public static final int head_contentLayout=0x7f080026;
-        public static final int head_lastUpdatedTextView=0x7f08002a;
-        public static final int head_progressBar=0x7f080028;
-        public static final int head_tipsTextView=0x7f080029;
+        public static final int head_arrowImageView=0x7f080028;
+        public static final int head_contentLayout=0x7f080027;
+        public static final int head_lastUpdatedTextView=0x7f08002b;
+        public static final int head_progressBar=0x7f080029;
+        public static final int head_tipsTextView=0x7f08002a;
         public static final int home_ll_01=0x7f080007;
         public static final int home_ll_02=0x7f080009;
         public static final int home_ll_03=0x7f08000b;
@@ -312,20 +312,20 @@ public final class R {
         public static final int login_authorize=0x7f08001b;
         public static final int login_spinner=0x7f080019;
         public static final int login_submit=0x7f08001a;
-        public static final int oauth_start=0x7f08002d;
+        public static final int oauth_start=0x7f08001c;
         public static final int pop_bt_c=0x7f08002f;
         public static final int pop_bt_r=0x7f08002e;
-        public static final int share_content=0x7f08001e;
-        public static final int share_image=0x7f080020;
-        public static final int share_image_delete=0x7f080021;
-        public static final int share_image_view=0x7f08001d;
-        public static final int share_imagechoose=0x7f08001f;
-        public static final int share_submit=0x7f080022;
-        public static final int share_userimage=0x7f080025;
-        public static final int share_username=0x7f080024;
-        public static final int share_word_counter=0x7f080023;
-        public static final int spinner_userhead=0x7f08002b;
-        public static final int spinner_username=0x7f08002c;
+        public static final int share_content=0x7f08001f;
+        public static final int share_image=0x7f080021;
+        public static final int share_image_delete=0x7f080022;
+        public static final int share_image_view=0x7f08001e;
+        public static final int share_imagechoose=0x7f080020;
+        public static final int share_submit=0x7f080023;
+        public static final int share_userimage=0x7f080026;
+        public static final int share_username=0x7f080025;
+        public static final int share_word_counter=0x7f080024;
+        public static final int spinner_userhead=0x7f08002c;
+        public static final int spinner_username=0x7f08002d;
         public static final int tvTimeline=0x7f08003c;
         public static final int weibo_item_comment=0x7f080035;
         public static final int weibo_item_commentImage=0x7f080034;
@@ -338,7 +338,7 @@ public final class R {
         public static final int weibo_item_text=0x7f080036;
         public static final int weibo_item_textImage=0x7f080037;
         public static final int weibo_item_time=0x7f08003a;
-        public static final int weibo_listview=0x7f08001c;
+        public static final int weibo_listview=0x7f08001d;
     }
     public static final class layout {
         public static final int activity_detail=0x7f030000;
@@ -351,9 +351,8 @@ public final class R {
         public static final int footview=0x7f030007;
         public static final int head=0x7f030008;
         public static final int login_user_item=0x7f030009;
-        public static final int oauth_dialog=0x7f03000a;
-        public static final int popwindow=0x7f03000b;
-        public static final int weibo_item=0x7f03000c;
+        public static final int popwindow=0x7f03000a;
+        public static final int weibo_item=0x7f03000b;
     }
     public static final class string {
         public static final int app_name=0x7f070001;

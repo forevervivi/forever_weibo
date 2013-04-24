@@ -59,13 +59,8 @@ public class OAuthActivity extends Activity {
 		setContentView(R.layout.activity_oauth);
 		mWeibo = Weibo.getInstance(CONSUMER_KEY, REDIRECT_URL);
 
-		View dialogView = View.inflate(this, R.layout.oauth_dialog, null);
-		dialog = new Dialog(this, R.style.oauth_style);
-		dialog.setContentView(dialogView);
-		dialog.setCanceledOnTouchOutside(false);
-		dialog.show();
 
-		Button oauth_start = (Button) dialogView.findViewById(R.id.oauth_start);
+		Button oauth_start = (Button) findViewById(R.id.oauth_start);
 		oauth_start.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
