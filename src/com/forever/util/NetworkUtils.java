@@ -25,6 +25,7 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo.State;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
@@ -135,16 +136,22 @@ public class NetworkUtils {
 
 				} catch (ClientProtocolException e) {
 					// TODO Auto-generated catch block
+					Looper.prepare();
 					e.printStackTrace();
-					Toast.makeText(context, "更新失败，请稍后再试", Toast.LENGTH_SHORT).show();
+					Toast.makeText(context, "天气更新失败，请检查网络或稍后再试", Toast.LENGTH_SHORT).show();
+					Looper.loop();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
+					Looper.prepare();
 					e.printStackTrace();
-					Toast.makeText(context, "更新失败，请稍后再试", Toast.LENGTH_SHORT).show();
+					Toast.makeText(context, "天气更新失败，请检查网络或稍后再试", Toast.LENGTH_SHORT).show();
+					Looper.loop();
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
+					Looper.prepare();
 					e.printStackTrace();
-					Toast.makeText(context, "更新失败，请稍后再试", Toast.LENGTH_SHORT).show();
+					Toast.makeText(context, "天气更新失败，请检查网络或稍后再试", Toast.LENGTH_SHORT).show();
+					Looper.loop();
 				}
 
 			}
