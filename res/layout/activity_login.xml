@@ -11,6 +11,7 @@
         android:layout_width="320dip"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:spinnerMode="dropdown"
         android:background="@drawable/titlebutton_bg" />
 
     <LinearLayout
