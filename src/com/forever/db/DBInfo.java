@@ -31,6 +31,10 @@ public class DBInfo {
          */
         public static final String USER_NAME = "user_name";
         /**
+         * 用户性别
+         */
+        public static final String USER_GENDER = "user_gender";
+        /**
          * 微博数量
          */
         public static final String STATUSES_COUNT = "statuses_count";
@@ -69,6 +73,7 @@ public class DBInfo {
                 + USER_ID
                 + " text, "
                 + USER_NAME + " text, "
+                + USER_GENDER + " text, "
                 + STATUSES_COUNT + " integer,"
                 + FOLLOWERS_COUNT + " integer,"
                 + FRIENDS_COUNT + " integer,"

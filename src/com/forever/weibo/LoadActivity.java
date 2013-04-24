@@ -11,9 +11,9 @@ import android.view.animation.Animation.AnimationListener;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.forever.handler.UserHandler;
 import com.forever.user.User;
 import com.forever.util.Tools;
-import com.forever.xx.Userxx;
 import com.weibo.forever.R;
 
 /**
@@ -75,8 +75,7 @@ public class LoadActivity extends Activity {
 
 	
 	private void start() {
-		//Tools.checkNetwork(LoadActivity.this);
-		Userxx userxx = new Userxx(LoadActivity.this);
+		UserHandler userxx = new UserHandler(LoadActivity.this);
 		List<User> list_users = userxx.findAllUsers();
 		
 		/**

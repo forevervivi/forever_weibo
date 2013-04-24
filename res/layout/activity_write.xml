@@ -10,7 +10,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="left"
-        android:orientation="vertical" >        <include layout="@layout/footview" />
+        android:orientation="vertical" >
+        <include layout="@layout/footview" />
     </LinearLayout>
 
     <EditText
@@ -19,6 +20,7 @@
         android:layout_height="match_parent"
         android:layout_above="@id/share_image_view"
         android:gravity="top"
+        android:background="@drawable/bg_edittext_drawble"
         android:hint="@string/weibo_hint"
         android:scrollbars="vertical" />
 

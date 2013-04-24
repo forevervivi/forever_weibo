@@ -92,48 +92,88 @@
                 </TextView>
             </LinearLayout>
         </LinearLayout>
+        <!-- 天气部分 -->
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:id="@+id/home_ll_05"
+            android:layout_width="221dip"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dip"
-            android:orientation="horizontal" >
+            android:background="#953399ff"
+            android:orientation="vertical"
+            android:padding="10dip" >
 
             <LinearLayout
-                android:id="@+id/home_ll_05"
-                android:layout_width="108dip"
-                android:layout_height="108dip"
-                android:background="#3399ff" >
-            </LinearLayout>
+                android:id="@+id/home_ll_05_01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
 
-            <LinearLayout
-                android:id="@+id/home_ll_06"
-                android:layout_width="108dip"
-                android:layout_height="108dip"
-                android:layout_marginLeft="5dip"
-                android:background="#3399ff" >
-            </LinearLayout>
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="200dip"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dip"
+                    android:orientation="horizontal" >
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dip"
-            android:orientation="horizontal" >
+                    <TextView
+                        android:id="@+id/home_tv_city"
+                        android:layout_width="90dip"
+                        android:layout_height="wrap_content"
+                        android:text="城市"
+                        android:textColor="@color/white" />
 
-            <LinearLayout
-                android:id="@+id/home_ll_07"
-                android:layout_width="108dip"
-                android:layout_height="108dip"
-                android:background="#953399ff" >
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/home_tv_temp"
+                        android:layout_width="90dip"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dip"
+                        android:text="温度"
+                        android:textColor="@color/white" />
+                </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/home_ll_08"
-                android:layout_width="108dip"
-                android:layout_height="108dip"
-                android:layout_marginLeft="5dip"
-                android:background="#953399ff" >
+                <LinearLayout
+                    android:layout_width="200dip"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dip"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/home_tv_date"
+                        android:layout_width="90dip"
+                        android:layout_height="wrap_content"
+                        android:text="日期"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/home_tv_week"
+                        android:layout_width="90dip"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dip"
+                        android:text="星期"
+                        android:textColor="@color/white" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="200dip"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dip"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/home_tv_weather"
+                        android:layout_width="90dip"
+                        android:layout_height="wrap_content"
+                        android:text="天气"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/home_tv_wind"
+                        android:layout_width="90dip"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dip"
+                        android:text="风力"
+                        android:textColor="@color/white" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

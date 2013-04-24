@@ -20,8 +20,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.forever.handler.UserHandler;
 import com.forever.user.User;
-import com.forever.xx.Userxx;
 import com.weibo.forever.R;
 
 public class LoginActivity extends Activity {
@@ -44,7 +44,7 @@ public class LoginActivity extends Activity {
 		bt_submit.setOnClickListener(myListerner);
 		bt_authorize.setOnClickListener(myListerner);
 
-		Userxx userxx = new Userxx(this);
+		UserHandler userxx = new UserHandler(this);
 		userData = userxx.findAllUsers();
 
 		if (userData.isEmpty()) {

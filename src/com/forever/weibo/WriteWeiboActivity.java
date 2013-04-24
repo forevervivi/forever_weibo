@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -16,8 +15,6 @@ import android.provider.MediaStore.Images;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -57,12 +54,12 @@ public class WriteWeiboActivity extends Activity {
 	private static final int TOOLBAR0 = 0;
 	private static final int TOOLBAR1 = 1;
 	private static final int TOOLBAR2 = 2;
-	
-	//private boolean repostFlag = false;
+
+	// private boolean repostFlag = false;
 	private String successText = "分享成功。";
 	private String failText = "分享失败。";
 	private String sendingText = "分享中……";
-	
+
 	private long repost_id;
 
 	private Activity mInstance = null;
@@ -75,9 +72,10 @@ public class WriteWeiboActivity extends Activity {
 	private ImageButton imgChooseBtn = null;
 	private ImageView imageView = null;
 	private ImageView imageDeleteView = null;
+	private ImageView imageUserHead = null;
+	private TextView username = null;
 	private EditText weiboContentText = null;
 	private TextView wordCounterView = null;
-	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,15 +85,14 @@ public class WriteWeiboActivity extends Activity {
 
 		mInstance = this;
 		mContext = this.getApplicationContext();
-		
 
 		initView();
-		
-		if(App.repostFlag == true) {
+
+		if (App.repostFlag == true) {
 			repost_id = this.getIntent().getExtras().getLong("repost_id");
 			imgChooseBtn.setVisibility(View.GONE);
 			shareBtn.setText("评论");
-			
+
 			successText = "评论成功。";
 			failText = "评论失败";
 			sendingText = "评论中……";
@@ -105,7 +102,9 @@ public class WriteWeiboActivity extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-
+		if (dialog.isShowing()) {
+			dialog.dismiss();
+		}
 	}
 
 	@Override
@@ -113,11 +112,12 @@ public class WriteWeiboActivity extends Activity {
 		super.onResume();
 
 	}
-	
+
 	@Override
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
+
 		App.repostFlag = false;
 	}
 
@@ -132,7 +132,12 @@ public class WriteWeiboActivity extends Activity {
 		imageDeleteView = (ImageView) findViewById(R.id.share_image_delete);
 		shareBtn = (Button) findViewById(R.id.share_submit);
 		imgChooseBtn = (ImageButton) findViewById(R.id.share_imagechoose);
+		username = (TextView) findViewById(R.id.share_username);
+		imageUserHead = (ImageView) findViewById(R.id.share_userimage);
 		
+		username.setText(UserCurrent.currentUser.getUser_name());
+		imageUserHead.setBackground(UserCurrent.currentUser.getUser_head());
+
 		shareBtn.setOnClickListener(listener);
 		imgChooseBtn.setOnClickListener(listener);
 		imageDeleteView.setOnClickListener(listener);
@@ -181,7 +186,6 @@ public class WriteWeiboActivity extends Activity {
 			case R.id.share_submit:
 				if (isChecked()) {
 					if (NetworkUtils.getNetworkState(mContext) != NetworkUtils.NONE) {
-						
 
 						dialog.setMessage(sendingText);
 						dialog.show();
@@ -194,14 +198,15 @@ public class WriteWeiboActivity extends Activity {
 					}
 				}
 				break;
-				
+
 			case R.id.share_imagechoose:
-				Intent intent = new Intent(Intent.ACTION_GET_CONTENT,Images.Media.EXTERNAL_CONTENT_URI);
+				Intent intent = new Intent(Intent.ACTION_GET_CONTENT,
+						Images.Media.EXTERNAL_CONTENT_URI);
 				intent.setType("image/*");
 				Intent wrapperIntent = Intent.createChooser(intent, null);
 				startActivityForResult(wrapperIntent, REQUEST_CODE_ADDIMAGE);
 				break;
-				
+
 			case R.id.share_image_delete:
 				DialogUtils.dialogBuilder(mInstance, "提示", "确定要清除图片吗？",
 						new DialogCallBack() {
@@ -213,7 +218,7 @@ public class WriteWeiboActivity extends Activity {
 							}
 						});
 				break;
-				
+
 			default:
 				break;
 			}
@@ -233,7 +238,8 @@ public class WriteWeiboActivity extends Activity {
 			String retMsg = data.getString("retMsg");
 
 			if (retCode == 1) {
-				Toast.makeText(mContext, successText, Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, successText, Toast.LENGTH_SHORT)
+						.show();
 
 				weiboContentText.setText("");
 				wordCounterView.setText("");
@@ -251,8 +257,6 @@ public class WriteWeiboActivity extends Activity {
 			}
 		}
 	};
-
-	
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -298,19 +302,22 @@ public class WriteWeiboActivity extends Activity {
 
 			if (!StringUtils.isBlank(weiboImgPath)) {
 				try {
-					Oauth2AccessToken o2at = AccessTokenKeeper
-							.readAccessToken(WriteWeiboActivity.this,UserCurrent.currentUser.getUser_id());
+					Oauth2AccessToken o2at = AccessTokenKeeper.readAccessToken(
+							WriteWeiboActivity.this,
+							UserCurrent.currentUser.getUser_id());
 
 					final StatusesAPI statuses = new StatusesAPI(o2at);
 					if (App.repostFlag == true) {
 						CommentsAPI comments = new CommentsAPI(o2at);
-						comments.create(weiboContentText.getText().toString(), repost_id, false, new MyReListener());
-						Log.i("repost_id", "WriteWeibo"+String.valueOf(repost_id));
-					}else{
-						statuses.upload( weiboContentText.getText().toString(), weiboImgPath, null, null, new MyReListener());
+						comments.create(weiboContentText.getText().toString(),
+								repost_id, false, new MyReListener());
+						Log.i("repost_id",
+								"WriteWeibo" + String.valueOf(repost_id));
+					} else {
+						statuses.upload(weiboContentText.getText().toString(),
+								weiboImgPath, null, null, new MyReListener());
 					}
-					
-					
+
 					retCode = 1;
 				} catch (Exception e) {
 					retCode = -1;
@@ -318,19 +325,24 @@ public class WriteWeiboActivity extends Activity {
 				}
 			} else {
 				try {
-					Oauth2AccessToken o2at = AccessTokenKeeper
-							.readAccessToken(WriteWeiboActivity.this,UserCurrent.currentUser.getUser_id());
+					Oauth2AccessToken o2at = AccessTokenKeeper.readAccessToken(
+							WriteWeiboActivity.this,
+							UserCurrent.currentUser.getUser_id());
 
 					final StatusesAPI statuses = new StatusesAPI(o2at);
-					//statuses.update( weiboContentText.getText().toString(), null, null, new MyReListener());
+					// statuses.update( weiboContentText.getText().toString(),
+					// null, null, new MyReListener());
 					if (App.repostFlag == true) {
 						CommentsAPI comments = new CommentsAPI(o2at);
-						comments.create(weiboContentText.getText().toString(), repost_id, false, new MyReListener());
-						Log.i("repost_id", "WriteWeibo"+String.valueOf(repost_id));
-					}else{
-						statuses.upload( weiboContentText.getText().toString(), weiboImgPath, null, null, new MyReListener());
+						comments.create(weiboContentText.getText().toString(),
+								repost_id, false, new MyReListener());
+						Log.i("repost_id",
+								"WriteWeibo" + String.valueOf(repost_id));
+					} else {
+						statuses.update(weiboContentText.getText().toString(),
+								 null, null, new MyReListener());
 					}
-					
+
 					retCode = 1;
 				} catch (Exception e) {
 					retCode = -1;
@@ -347,26 +359,27 @@ public class WriteWeiboActivity extends Activity {
 			shareHandler.sendMessage(msg);
 		}
 	}
-	
+
 	class MyReListener implements RequestListener {
 
 		@Override
 		public void onComplete(String arg0) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onError(WeiboException arg0) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onIOException(IOException arg0) {
 			// TODO Auto-generated method stub
-			
-		}}
+
+		}
+	}
 
 	/**
 	 * 数据合法性判断
@@ -387,7 +400,5 @@ public class WriteWeiboActivity extends Activity {
 		}
 		return ret;
 	}
-
-
 
 }

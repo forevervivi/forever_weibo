@@ -67,7 +67,7 @@ public class Tools {
 	/**
 	 * 判断网络是否可用
 	 */
-	public static Boolean isNetworkAvailable(Context context) {
+	/*public static Boolean isNetworkAvailable(Context context) {
 		ConnectivityManager cm = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -114,5 +114,5 @@ public class Tools {
 								}
 							}).create().show();
 		}
-	}
+	}*/
 }
