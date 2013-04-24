@@ -1,18 +1,12 @@
 package com.forever.weibo;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,8 +16,6 @@ import android.webkit.CookieSyncManager;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.forever.handler.UserHandler;
-import com.forever.user.User;
 import com.forever.util.NetworkUtils;
 import com.forever.weibo.LoginActivity.UserCurrent;
 import com.weibo.forever.R;
@@ -51,7 +43,6 @@ public class OAuthActivity extends Activity {
 
 	public static Oauth2AccessToken accessToken;
 	private String uid;
-	private Dialog dialog = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +90,6 @@ public class OAuthActivity extends Activity {
 				Toast.makeText(OAuthActivity.this, "认证成功", Toast.LENGTH_SHORT)
 						.show();
 
-				dialog.dismiss();
 				Log.i("OAuthActivity", "OAuthActivity.accessToken:"
 						+ OAuthActivity.accessToken);
 

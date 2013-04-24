@@ -408,7 +408,7 @@ public class WeiboActivity extends Activity {
 				}
 				
 
-				// 内容中图片
+				// 内容中图片  如果是wifi用中等缩略图，如果是gprs用小缩略图
 				if(NetworkUtils.getNetworkState(WeiboActivity.this)==NetworkUtils.WIFI){
 					textImage = "bmiddle_pic";
 				}else if(NetworkUtils.getNetworkState(WeiboActivity.this)==NetworkUtils.MOBILE) {
