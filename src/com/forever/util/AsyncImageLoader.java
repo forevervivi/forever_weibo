@@ -50,11 +50,22 @@ public class AsyncImageLoader {
 			}
 		}
 
-		final Handler handler = new Handler() {
+/*		final Handler handler = new Handler() {
 			@Override
 			public  synchronized void handleMessage(Message msg) {
 				// 图片资源设置操作
 				callback.imageSet((Drawable) msg.obj, imageView);
+			}
+		};*/
+		final Handler handler = new Handler() {
+			@Override
+			public  synchronized void handleMessage(Message msg) {
+				// 图片资源设置操作
+				if(imageView != null &&!url.equals("")&&imageView.getTag().toString().equals(url)) {
+					callback.imageSet((Drawable) msg.obj, imageView);
+					Log.i("!!", " handleMessage" + url + "position : "+ position);
+				}
+				
 			}
 		};
 		// 下载操作
