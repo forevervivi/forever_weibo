@@ -545,7 +545,7 @@ public class WeiboActivity extends Activity {
 
 												Drawable xxxx = AsyncImageLoader
 														.loadDrawable(
-																0,
+																2,
 																(((JSONObject) getItem(position))
 																		.getString("original_pic")),
 																holder.image_original_pic,

@@ -1,28 +1,19 @@
 package com.forever.util;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.provider.Settings;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.weibo.forever.R;
+import android.util.Log;
 
 public class Tools {
 
@@ -35,27 +26,32 @@ public class Tools {
 	/**
 	 * 通过url 获得对应的Drawable资源
 	 * 
+	 * @param flag
+	 *            是否压缩标记
 	 * @param url
+	 *            图片地址
 	 * @return
 	 */
-	public static Drawable getDrawableFromUrl(int flag,String url) {
+	public static Drawable getDrawableFromUrl(int flag, String url) {
 		try {
-			URLConnection urls = new URL(url).openConnection();
-			if(flag == 0){
-				return Drawable.createFromStream(urls.getInputStream(),"image");
-			}
-			else if(flag == 1) {
-				BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-				bitmapOptions.inSampleSize = 4;
-
-				Bitmap bitmap = BitmapFactory.decodeStream(urls.getInputStream(),
-						null, bitmapOptions);
+			URLConnection urlc = new URL(url).openConnection();
+			URLConnection urlc2 = new URL(url).openConnection();
+			if (flag == 0) {
+				return Drawable
+						.createFromStream(urlc.getInputStream(), "image");
+			} else if (flag == 1) {
+				Bitmap bitmap = Tools
+						.decodeSampledBitmapFromStream(urlc.getInputStream(),
+								urlc2.getInputStream(), 200, 200);
+				BitmapDrawable bd = new BitmapDrawable(bitmap);
+				return bd;
+			} else if (flag == 2) {
+				Bitmap bitmap = Tools
+						.decodeSampledBitmapFromStream(urlc.getInputStream(),
+								urlc2.getInputStream(), 800, 800);
 				BitmapDrawable bd = new BitmapDrawable(bitmap);
 				return bd;
 			}
-			
-
-		//	
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -64,55 +60,43 @@ public class Tools {
 		return null;
 	}
 
-	/**
-	 * 判断网络是否可用
-	 */
-	/*public static Boolean isNetworkAvailable(Context context) {
-		ConnectivityManager cm = (ConnectivityManager) context
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
+	public static Bitmap decodeSampledBitmapFromStream(InputStream is,
+			InputStream is2, int reqWidth, int reqHeight) {
 
-		if (cm == null) {
-			Toast.makeText(context, "没有网络", Toast.LENGTH_SHORT).show();
-			return false;
-		} else {
-			NetworkInfo[] netInfos = cm.getAllNetworkInfo();
-			if (netInfos != null) {
-				for (NetworkInfo netInfo : netInfos) {
-					if (netInfo.getState() == NetworkInfo.State.CONNECTED) {
-						Toast.makeText(context, "网络可用", Toast.LENGTH_SHORT)
-								.show();
-						return true;
-					}
-				}
-			}
-		}
-		return false;
+		final BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeStream(is, null, options);
+
+		options.inSampleSize = calculateInSampleSize(options, reqWidth,
+				reqHeight);
+		options.inJustDecodeBounds = false;
+		Log.i("Bitmap", "options.inSampleSize: " + options.inSampleSize
+				+ "\noptions.outWidth:" + options.outWidth
+				+ " options.outHeight:" + options.outHeight);
+		return BitmapFactory.decodeStream(is2, null, options);
+
 	}
 
-	// 网络不可用时候提示设置网络对话框
-	public static void checkNetwork(final Context context) {
+	public static int calculateInSampleSize(BitmapFactory.Options options,
+			int reqWidth, int reqHeight) {
+		// Raw height and width of image
+		final int height = options.outHeight;
+		final int width = options.outWidth;
+		int inSampleSize = 1;
 
-		if (!isNetworkAvailable(context)) {
-			TextView msg;// 对话框显示内容
-			msg = new TextView(context);
-			msg.setText("当前没有可以使用的网络，请设置网络");
-			new AlertDialog.Builder(context)
-					.setIcon(R.drawable.not)
-					.setTitle("网络状态提示")
-					.setView(msg)
-					.setPositiveButton("确定",
-							new DialogInterface.OnClickListener() {
+		Log.i("Bitmap", "reqWidth" + reqWidth + "reqHeight" + reqHeight);
 
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-									// TODO Auto-generated method stub
-									Intent intent = new Intent(
-											Settings.ACTION_WIRELESS_SETTINGS);
-									context.startActivity(intent);
-									((Activity) context).finish();
-								}
-							}).create().show();
+		if (height > reqHeight || width > reqWidth) {
+			final int heightRatio = Math.round((float) height
+					/ (float) reqHeight);
+			final int widthRatio = Math.round((float) width / (float) reqWidth);
+
+			Log.i("Bitmap", "heightRatio" + heightRatio + "widthRatio"
+					+ widthRatio);
+
+			inSampleSize = heightRatio <= widthRatio ? heightRatio : widthRatio;
+			Log.i("Bitmap", "inSampleSize:" + inSampleSize);
 		}
-	}*/
+		return inSampleSize;
+	}
 }
