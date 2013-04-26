@@ -10,9 +10,6 @@ import java.util.Date;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 public class Tools {
@@ -32,7 +29,7 @@ public class Tools {
 	 *            图片地址
 	 * @return
 	 */
-	public static Bitmap getDrawableFromUrl(int flag, String url) {
+	public static Bitmap getBitmapFromUrl(int flag, String url) {
 		try {
 			URLConnection urlc = new URL(url).openConnection();
 			URLConnection urlc2 = new URL(url).openConnection();

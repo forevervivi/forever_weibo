@@ -4,7 +4,6 @@ import java.lang.ref.SoftReference;
 import java.util.HashMap;
 
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -70,7 +69,7 @@ public class AsyncImageLoader {
 		// 下载操作
 		new Thread() {
 			public void run() {
-				Bitmap bitmap = Tools.getDrawableFromUrl(flag, url);
+				Bitmap bitmap = Tools.getBitmapFromUrl(flag, url);
 				// 设置缓存，避免重复下载相同的图片资源
 				imageCache.put(url, new SoftReference<Bitmap>(bitmap));
 				/*
