@@ -32,25 +32,26 @@ public class Tools {
 	 *            图片地址
 	 * @return
 	 */
-	public static Drawable getDrawableFromUrl(int flag, String url) {
+	public static Bitmap getDrawableFromUrl(int flag, String url) {
 		try {
 			URLConnection urlc = new URL(url).openConnection();
 			URLConnection urlc2 = new URL(url).openConnection();
 			if (flag == 0) {
-				return Drawable
-						.createFromStream(urlc.getInputStream(), "image");
+				/*
+				 * return Drawable .createFromStream(urlc.getInputStream(),
+				 * "image");
+				 */
+				return Tools.decodeSampledBitmapFromStream(
+						urlc.getInputStream(), urlc2.getInputStream(), 50, 50);
 			} else if (flag == 1) {
-				Bitmap bitmap = Tools
+				return Tools
 						.decodeSampledBitmapFromStream(urlc.getInputStream(),
-								urlc2.getInputStream(), 200, 200);
-				BitmapDrawable bd = new BitmapDrawable(bitmap);
-				return bd;
+								urlc2.getInputStream(), 150, 150);
+
 			} else if (flag == 2) {
-				Bitmap bitmap = Tools
+				return Tools
 						.decodeSampledBitmapFromStream(urlc.getInputStream(),
-								urlc2.getInputStream(), 800, 800);
-				BitmapDrawable bd = new BitmapDrawable(bitmap);
-				return bd;
+								urlc2.getInputStream(), 300, 300);
 			}
 		} catch (MalformedURLException e) {
 			e.printStackTrace();

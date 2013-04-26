@@ -13,6 +13,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -482,17 +483,17 @@ public class WeiboActivity extends Activity {
 						((JSONObject) getItem(position)).getString("user"))
 						.getString("profile_image_url");
 				holder.image_head.setTag(image_head_url);
-				Drawable head_image = AsyncImageLoader.loadDrawable(0,
+				Bitmap head_image = AsyncImageLoader.loadBitmap(0,
 						image_head_url, holder.image_head, position,
 						new ImageCallback() {
 							@Override
-							public void imageSet(Drawable drawable, ImageView iv) {
-								iv.setImageDrawable(drawable);
+							public void imageSet(Bitmap bitmap, ImageView iv) {
+								iv.setImageBitmap(bitmap);
 							}
 						});
 
 				if (head_image != null) {
-					holder.image_head.setImageDrawable(head_image);
+					holder.image_head.setImageBitmap(head_image);
 				}
 
 				// 内容中图片 如果是wifi用中等缩略图，如果是gprs用小缩略图
@@ -507,20 +508,21 @@ public class WeiboActivity extends Activity {
 					String image_textImage_url = ((JSONObject) getItem(position))
 							.getString(textImage);
 					holder.image_textImage.setTag(image_textImage_url);
-					Drawable image_text = AsyncImageLoader.loadDrawable(1,
+					Bitmap image_text = AsyncImageLoader.loadBitmap(1,
 							(((JSONObject) getItem(position)) // getItem
 																// mJsonArray.get
 									.getString(textImage)),
 							holder.image_textImage, position,
 							new ImageCallback() {
 								@Override
-								public void imageSet(Drawable drawable,
+								public void imageSet(Bitmap drawable,
 										ImageView iv) {
-									iv.setImageDrawable(drawable);
+									iv.setImageBitmap(drawable);
 								}
 							});
 					if (image_text != null) {
-						holder.image_textImage.setImageDrawable(image_text);
+						//holder.image_textImage.setImageDrawable(image_text);
+						holder.image_textImage.setImageBitmap(image_text);
 
 						holder.image_textImage.setVisibility(View.VISIBLE);
 
@@ -543,8 +545,8 @@ public class WeiboActivity extends Activity {
 												holder.image_original_pic
 														.setTag(iv_original_pic_url);
 
-												Drawable xxxx = AsyncImageLoader
-														.loadDrawable(
+												Bitmap xxxx = AsyncImageLoader
+														.loadBitmap(
 																2,
 																(((JSONObject) getItem(position))
 																		.getString("original_pic")),
@@ -553,14 +555,14 @@ public class WeiboActivity extends Activity {
 																new ImageCallback() {
 																	@Override
 																	public void imageSet(
-																			Drawable drawable,
+																			Bitmap bitmap,
 																			ImageView iv) {
-																		iv.setImageDrawable(drawable);
+																		iv.setImageBitmap(bitmap);
 																	}
 																});
 												if (xxxx != null) {
 													holder.image_original_pic
-															.setImageDrawable(xxxx);
+															.setImageBitmap(xxxx);
 													holder.dialog_original_pic.show();
 
 												}
@@ -580,7 +582,7 @@ public class WeiboActivity extends Activity {
 										} else {
 											
 											  holder.image_original_pic
-											  .setImageDrawable(null);
+											  .setImageBitmap(null);
 											  
 											 
 											Toast.makeText(WeiboActivity.this,
@@ -617,13 +619,13 @@ public class WeiboActivity extends Activity {
 			viewHolder.tv_retweeted_status_texts.setText(null);
 		}
 
-		viewHolder.image_head.setImageDrawable(null);
+		viewHolder.image_head.setImageBitmap(null);
 		if (viewHolder.image_textImage != null) {
-			viewHolder.image_textImage.setImageDrawable(null);
+			viewHolder.image_textImage.setImageBitmap(null);
 		}
 		
 		if (viewHolder.image_original_pic != null) {
-			viewHolder.image_original_pic.setImageDrawable(null);
+			viewHolder.image_original_pic.setImageBitmap(null);
 		}
 
 	}
