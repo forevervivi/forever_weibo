@@ -5,6 +5,7 @@
     android:orientation="vertical" 
     android:background="@color/window_bg">
     
+   
     <com.forever.customui.MyListView
         android:id="@+id/weibo_listview"
         android:layout_width="match_parent"

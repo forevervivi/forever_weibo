@@ -1,7 +1,6 @@
 package com.forever.weibo;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,7 +14,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -72,8 +70,7 @@ public class WeiboActivity extends Activity {
 	private Dialog dialog;
 	private AlertDialog dialog_original_pic;
 	private JSONArray weibo_array;
-
-	private final ArrayList<View> mActiveImages = new ArrayList<View>();
+	private View view;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,34 +82,15 @@ public class WeiboActivity extends Activity {
 		dialog_original_pic = new AlertDialog.Builder(WeiboActivity.this)
 				.create();// 原始大小图片dialog
 
-		/*
-		 * View view = LayoutInflater.from(WeiboActivity.this).inflate(
-		 * R.layout.dialog_original_pic, null);
-		 * dialog_original_pic.setView(view); iv_original_pic = (ImageView)
-		 * view.findViewById(R.id.iv_original_pic);
-		 */
+		view = LayoutInflater.from(WeiboActivity.this).inflate(
+				R.layout.dialog_original_pic, null);
+		dialog_original_pic.setView(view);
 
 		dialog.setTitle("正在获得数据……");
-		// dialog.setIndeterminate(false);
 		dialog.show();
 
 		listView = (MyListView) findViewById(R.id.weibo_listview);
 		// listView = (ListView) findViewById(R.id.weibo_listview);
-
-		/*
-		 * 写在这里监听没有作用…… bt_pop_r = (Button) popview.findViewById(R.id.pop_bt_r);
-		 * bt_pop_c = (Button) popview.findViewById(R.id.pop_bt_c);
-		 * 
-		 * bt_pop_r.setOnClickListener(new OnClickListener() {
-		 * 
-		 * @Override public void onClick(View v) { // TODO Auto-generated method
-		 * stub Log.i("Weibo","点击了转发按键"); } });
-		 * 
-		 * bt_pop_c.setOnClickListener(new OnClickListener() {
-		 * 
-		 * @Override public void onClick(View v) { // TODO Auto-generated method
-		 * stub Log.i("Weibo","点击了评论按键"); } });
-		 */
 
 		handler = new Handler();
 
@@ -260,9 +238,9 @@ public class WeiboActivity extends Activity {
 				return true;
 			}
 		});
-		
+
 	}
-	
+
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		// TODO Auto-generated method stub
@@ -318,7 +296,6 @@ public class WeiboActivity extends Activity {
 		}
 	}
 
-	
 	class MyAdapter extends BaseAdapter {
 
 		private ViewHolder holder;
@@ -358,41 +335,8 @@ public class WeiboActivity extends Activity {
 		public View getView(final int position, View convertView,
 				ViewGroup parent) {
 			holder = null;
-			
-			
-			convertView = LayoutInflater.from(mContext).inflate(
-					R.layout.weibo_item, null);
 
-			holder = new ViewHolder();
-			holder.image_head = (ImageView) convertView
-					.findViewById(R.id.weibo_item_headimage);
-
-			holder.tv_name = (TextView) convertView
-					.findViewById(R.id.weibo_item_name);
-			holder.tv_text = (TextView) convertView
-					.findViewById(R.id.weibo_item_text);
-
-			holder.image_textImage = (ImageView) convertView
-					.findViewById(R.id.weibo_item_textImage);
-			
-			 
-
-			holder.tv_time = (TextView) convertView
-					.findViewById(R.id.weibo_item_time);
-			holder.tv_repost = (TextView) convertView
-					.findViewById(R.id.weibo_item_repost);
-			holder.tv_comment = (TextView) convertView
-					.findViewById(R.id.weibo_item_comment);
-
-			View view = LayoutInflater.from(WeiboActivity.this).inflate(
-					R.layout.dialog_original_pic, null);
-			holder.dialog_original_pic = new AlertDialog.Builder(WeiboActivity.this)
-			.create();
-			holder.dialog_original_pic.setView(view);
-			holder.image_original_pic = (ImageView) view
-					.findViewById(R.id.iv_original_pic);
-
-			/*if (convertView == null) {
+			if (convertView == null) {
 				convertView = LayoutInflater.from(mContext).inflate(
 						R.layout.weibo_item, null);
 
@@ -407,10 +351,9 @@ public class WeiboActivity extends Activity {
 
 				holder.image_textImage = (ImageView) convertView
 						.findViewById(R.id.weibo_item_textImage);
-				
-				 * holder.tv_retweeted_status_texts = (TextView) convertView
-				 * .findViewById(R.id.weibo_item_retweeted_status_texts);
-				 
+
+				holder.tv_retweeted_status_texts = (TextView) convertView
+						.findViewById(R.id.weibo_item_retweeted_status_texts);
 
 				holder.tv_time = (TextView) convertView
 						.findViewById(R.id.weibo_item_time);
@@ -419,28 +362,16 @@ public class WeiboActivity extends Activity {
 				holder.tv_comment = (TextView) convertView
 						.findViewById(R.id.weibo_item_comment);
 
-				View view = LayoutInflater.from(WeiboActivity.this).inflate(
-						R.layout.dialog_original_pic, null);
-				holder.dialog_original_pic = new AlertDialog.Builder(WeiboActivity.this)
-				.create();
-				holder.dialog_original_pic.setView(view);
 				holder.image_original_pic = (ImageView) view
 						.findViewById(R.id.iv_original_pic);
 
 				convertView.setTag(holder);
 
 			} else {
-				holder = (ViewHolder) convertView.getTag();
-				// resetViewHolder(holder);
-			}*/
+				holder = (ViewHolder) convertView.getTag(); //
+				resetViewHolder(holder);
+			}
 
-			TextView tv_retweeted_status_texts = (TextView) convertView
-					.findViewById(R.id.weibo_item_retweeted_status_texts);
-
-			/*
-			 * ImageView image_textImage = (ImageView) convertView
-			 * .findViewById(R.id.weibo_item_textImage);
-			 */
 			try {
 				holder.tv_time.setText(Tools
 						.formatDate(((JSONObject) getItem(position))
@@ -456,10 +387,71 @@ public class WeiboActivity extends Activity {
 				holder.tv_comment.setText(String
 						.valueOf(((JSONObject) getItem(position))
 								.getInt("comments_count")));
+
+				// 点击小图片显示原始大小图片
+				holder.image_textImage
+						.setOnClickListener(new OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								Log.i("!!!", "点击了大图片");
+
+								if (((JSONObject) getItem(position))
+										.has("original_pic")) {
+
+									try {
+										String iv_original_pic_url =
+
+										((JSONObject) getItem(position))
+												.getString("original_pic");
+										holder.image_original_pic
+												.setTag(iv_original_pic_url);
+
+										Bitmap xxxx = AsyncImageLoader
+												.loadBitmap(
+														2,
+														(((JSONObject) getItem(position))
+																.getString("original_pic")),
+														holder.image_original_pic,
+														position,
+														new ImageCallback() {
+															@Override
+															public void imageSet(
+																	Bitmap bitmap,
+																	ImageView iv) {
+																iv.setImageBitmap(bitmap);
+															}
+														});
+										if (xxxx != null) {
+											holder.image_original_pic
+													.setImageBitmap(xxxx);
+											dialog_original_pic.show();
+										}
+
+									} catch (JSONException e) {
+										// TODO Auto-generated catch
+										// block
+										e.printStackTrace();
+										Toast.makeText(WeiboActivity.this,
+												"未获取到原始图片，请稍后再试",
+												Toast.LENGTH_LONG).show();
+									}
+
+								} else {
+
+									holder.image_original_pic
+											.setImageBitmap(null);
+									Toast.makeText(WeiboActivity.this, "没有大图",
+											Toast.LENGTH_LONG).show();
+								}
+
+							}
+						});
+
 				// 微博原文
 				if (((JSONObject) getItem(position)).has("retweeted_status")) {
 					/* holder.tv_retweeted_status_texts */
-					tv_retweeted_status_texts
+					holder.tv_retweeted_status_texts
 							.setText(((JSONObject) getItem(position))
 									.getJSONObject("retweeted_status")
 									.getJSONObject("user").getString("name")
@@ -509,8 +501,7 @@ public class WeiboActivity extends Activity {
 							.getString(textImage);
 					holder.image_textImage.setTag(image_textImage_url);
 					Bitmap image_text = AsyncImageLoader.loadBitmap(1,
-							(((JSONObject) getItem(position)) // getItem
-																// mJsonArray.get
+							(((JSONObject) getItem(position))
 									.getString(textImage)),
 							holder.image_textImage, position,
 							new ImageCallback() {
@@ -520,79 +511,10 @@ public class WeiboActivity extends Activity {
 									iv.setImageBitmap(drawable);
 								}
 							});
+
 					if (image_text != null) {
-						//holder.image_textImage.setImageDrawable(image_text);
 						holder.image_textImage.setImageBitmap(image_text);
-
 						holder.image_textImage.setVisibility(View.VISIBLE);
-
-						// 点击小图片显示原始大小图片
-
-						holder.image_textImage
-								.setOnClickListener(new OnClickListener() {
-
-									@Override
-									public void onClick(View v) {
-										if (((JSONObject) getItem(position))
-												.has("original_pic")) {
-
-											try {
-												String iv_original_pic_url = ((JSONObject) getItem(position))
-														.getString("original_pic");
-												Log.i("!!", iv_original_pic_url
-														+ "position : "
-														+ position);
-												holder.image_original_pic
-														.setTag(iv_original_pic_url);
-
-												Bitmap xxxx = AsyncImageLoader
-														.loadBitmap(
-																2,
-																(((JSONObject) getItem(position))
-																		.getString("original_pic")),
-																holder.image_original_pic,
-																position,
-																new ImageCallback() {
-																	@Override
-																	public void imageSet(
-																			Bitmap bitmap,
-																			ImageView iv) {
-																		iv.setImageBitmap(bitmap);
-																	}
-																});
-												if (xxxx != null) {
-													holder.image_original_pic
-															.setImageBitmap(xxxx);
-													holder.dialog_original_pic.show();
-
-												}
-
-											} catch (JSONException e) {
-												// TODO Auto-generated catch
-												// block
-
-												e.printStackTrace();
-												Toast.makeText(
-														WeiboActivity.this,
-														"未获取到原始图片，请稍后再试",
-														Toast.LENGTH_LONG)
-														.show();
-											}
-
-										} else {
-											
-											  holder.image_original_pic
-											  .setImageBitmap(null);
-											  
-											 
-											Toast.makeText(WeiboActivity.this,
-													"没有大图", Toast.LENGTH_LONG)
-													.show();
-
-										}
-
-									}
-								});
 					}
 
 				} else {
@@ -606,7 +528,6 @@ public class WeiboActivity extends Activity {
 
 			return convertView;
 		}
-
 	}
 
 	private void resetViewHolder(ViewHolder viewHolder) {
@@ -623,7 +544,7 @@ public class WeiboActivity extends Activity {
 		if (viewHolder.image_textImage != null) {
 			viewHolder.image_textImage.setImageBitmap(null);
 		}
-		
+
 		if (viewHolder.image_original_pic != null) {
 			viewHolder.image_original_pic.setImageBitmap(null);
 		}
@@ -635,7 +556,6 @@ public class WeiboActivity extends Activity {
 		public TextView tv_name, tv_text, tv_time;
 		public TextView tv_repost, tv_comment;
 		public TextView tv_retweeted_status_texts;
-		public AlertDialog dialog_original_pic;
 	}
 
 }
